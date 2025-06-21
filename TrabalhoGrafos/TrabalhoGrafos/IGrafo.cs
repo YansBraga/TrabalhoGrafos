@@ -9,6 +9,7 @@ namespace TrabalhoGrafos
     public interface IGrafo
     {
         int NumeroVertices { get; }
+        int NumeroArestas { get; }
         void AdicionarAresta(int origem, int destino, int peso);
         void Imprimir();
     }

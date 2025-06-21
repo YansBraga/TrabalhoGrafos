@@ -1,120 +1,184 @@
 ﻿using System.Text;
 
 
-namespace TrabalhoGrafos
+string? grafo = null;
+bool sair = false;
+int arestas = 0;
+int vertices = 0;
+
+while (!sair)
 {
-    internal class Program
+    Console.Clear();
+
+    if (grafo == null)
     {
-        static void Main(string[] args)
+        ExibirMenuCriacao();
+        if (int.TryParse(Console.ReadLine(), out int opcaoCriacao))
         {
-            string? grafo = null; 
-            bool sair = false;
-            int arestas = 0;
-            int vertices = 0;
-
-
-
-
-            while (!sair)
+            switch (opcaoCriacao)
             {
-                Console.Clear();
-                
-                if (grafo == null)
-                {
-                    ExibirMenuCriacao();
-                    if (int.TryParse(Console.ReadLine(), out int opcaoCriacao))
-                    {
-                        switch (opcaoCriacao)
-                        {
-                            case 1:
-                                Console.Write("Digite o caminho do arquivo DIMACS: ");
-                                string caminhoArquivo = Console.ReadLine();                                
-                                //grafo = new Grafo(0); // Inicializa o grafo com 0 vértices
-                                break;
-                            case 2:
-                                Console.WriteLine("Insira a quantidade de vértices e arestas respectivamente: ");
-                                vertices = int.Parse(Console.ReadLine());
-                                arestas = int.Parse(Console.ReadLine());
+                case 1:
+                    Console.Write("Digite o caminho do arquivo DIMACS: ");
+                    string caminhoArquivo = Console.ReadLine();
+                    //grafo = new Grafo(0); // Inicializa o grafo com 0 vértices
+                    break;
+                case 2:
+                    Console.WriteLine("Insira a quantidade de vértices e arestas respectivamente: ");
+                    vertices = int.Parse(Console.ReadLine());
+                    arestas = int.Parse(Console.ReadLine());
 
+                    //grafo = new Grafo(vertices, arestas);
 
-
-                                //grafo = new Grafo(vertices, arestas);
-
-                                ExibirMenuPrincipal();
-                                break;
-                            case 3:
-
-                                
-                                break;
-                            default:
-                                Console.WriteLine("Opção inválida. Tente novamente.");
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine("Entrada inválida. Por favor, insira um número.");
-                    }
-                }
-                // Se o grafo JÁ EXISTE, mostra o menu de operações
-                else
-                {
                     ExibirMenuPrincipal();
-                    if (int.TryParse(Console.ReadLine(), out int opcaoPrincipal))
-                    {
-                        // Aqui você implementará o switch para todas as 15 operações do trabalho
-                        switch (opcaoPrincipal)
-                        {
-                            case 1:
-                                // grafo.Imprimir();
-                                Console.WriteLine("Funcionalidade de impressão a ser implementada.");
-                                break;
-                            
-                            case 16: // Opção para voltar ao menu anterior
-                                grafo = null; // Descarta o grafo atual
-                                Console.WriteLine("Retornando ao menu de criação de grafo.");
-                                break;
-                            case 0:
-                                sair = true; // Define a flag para sair do loop
-                                break;
-                            default:
-                                Console.WriteLine("Opção inválida. Tente novamente.");
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine("Entrada inválida. Por favor, insira um número.");
-                    }
-                }
+                    break;
+                case 3:
 
+
+                    break;
+                default:
+                    Console.WriteLine("Opção inválida. Tente novamente.");
+                    break;
             }
-
-            Console.WriteLine("\nObrigado por usar o sistema. Programa encerrado.");
         }
-
-        private static void ExibirMenuPrincipal()
+        else
         {
-            Console.WriteLine("--- Menu Principal (Grafo Carregado) ---");
-            Console.WriteLine("Escolha uma operação para realizar no grafo:");
-            Console.WriteLine("1 - Imprimir representação do grafo");
-            // Adicione as outras 14 opções do trabalho aqui
-            // ...
-            Console.WriteLine("16 - Descartar grafo e voltar");
-            Console.WriteLine("0 - Sair do Programa");
-            Console.Write("\nEscolha uma opção: ");
+            Console.WriteLine("Entrada inválida. Por favor, insira um número.");
         }
-
-        private static void ExibirMenuCriacao()
+    }
+    // Se o grafo JÁ EXISTE, mostra o menu de operações
+    else
+    {
+        ExibirMenuPrincipal();
+        if (int.TryParse(Console.ReadLine(), out int opcaoPrincipal))
         {
-            Console.WriteLine("--- Menu de Criação de Grafo ---");
-            Console.WriteLine("Nenhum grafo carregado. Por favor, escolha uma opção:");
-            Console.WriteLine("1 - Importar Grafo de arquivo DIMACS");
-            Console.WriteLine("2 - Preencher manualmente");
-            Console.WriteLine("3 - Desafio");
-            Console.WriteLine("4 - Sair");
-            Console.Write("\nEscolha uma opção: ");
+            // Aqui você implementará o switch para todas as 15 operações do trabalho
+            switch (opcaoPrincipal)
+            {
+                case 1: //  Leitura e impressão de um grafo já pronto. Nesse caso, vocês deverão ler um grafo de entrada no formato DIMACS 1. O grafo a ser lido, deve ser representado em uma Lista de Adjacência, Matriz de Adjacência ou Matriz de Incidência.
+                        //Console.WriteLine(grafo.Imprimir());
+                    break;
+
+                case 2: //  Imprimir todas as arestas adjacentes a uma aresta a, informada pelo usuário.
+                    LerAresta();
+                    break;
+
+                case 3: //  Imprimir todos os vértices adjacentes a um vértice v, informado pelo usuário.
+                    LerVertice();
+                    break;
+
+                case 4: //  Imprimir todas as arestas incidentes a um vértice v, informado pelo usuário.
+                    LerVertice();
+                    break;
+
+                case 5: //  Imprimir todos os vértices incidentes a uma aresta a, informada pelo usuário.
+                    LerAresta();
+                    break;
+
+                case 6: //  Imprimir o grau do vértice v, informado pelo usuário.
+                    LerVertice();
+                    // grafo.Imprimir();
+                    break;
+
+                case 7: //  Determinar se dois vértices são adjacentes
+                    LerAresta();
+                    break;
+
+                case 8: //  Substituir o peso de uma aresta a, informada pelo usuário
+                    LerAresta();
+                    break;
+
+                case 16: // Opção para voltar ao menu anterior
+                    grafo = null; // Descarta o grafo atual
+                    Console.WriteLine("Retornando ao menu de criação de grafo.");
+                    break;
+                case 0:
+                    sair = true; // Define a flag para sair do loop
+                    break;
+                default:
+                    Console.WriteLine("Opção inválida. Tente novamente.");
+                    break;
+            }
         }
-            
-    }        
+        else
+        {
+            Console.WriteLine("Entrada inválida. Por favor, insira um número.");
+        }
+    }
+
+}
+
+Console.WriteLine("\nObrigado por usar o sistema. Programa encerrado.");
+
+void ExibirMenuPrincipal()
+{
+    Console.WriteLine("--- Menu Principal (Grafo Carregado) ---");
+    Console.WriteLine("Escolha uma operação para realizar no grafo:");
+    Console.WriteLine("1. Imprimir representação do grafo");
+    Console.WriteLine("2. Imprimir todas as arestas adjacentes a uma aresta");
+    Console.WriteLine("3. Imprimir todos os vértices adjacentes a um vértice");
+    Console.WriteLine("4. Imprimir todas as arestas incidentes a um vértice");
+    Console.WriteLine("5. Imprimir todos os vértices incidentes a uma aresta");
+    Console.WriteLine("6. Imprimir o grau de um vértice");
+    Console.WriteLine("7. Determinar se dois vértices são adjacentes");
+    Console.WriteLine("8. Substituir o peso de uma aresta");
+    Console.WriteLine("9. Trocar dois vértices"); /* Como exemplo, considere um vértice v1 que se conecta aos
+                                                            vértices v3, v5 e v7, ao passo que o vértice v2 se conecta aos vértices v4 e v6. 
+                                                            A troca dos vértices v1 e v2 implicaria que o vértice v1 estaria conectado aos
+                                                            vértices v4 e v6. Por sua vez, o vértice v2 estaria conectado aos vértices v3, v5
+                                                            e v7. O usuário deverá informar qual são os dois vértices a serem trocados.
+                                                          */
+    Console.WriteLine("1 - Imprimir representação do grafo");
+    Console.WriteLine("1 - Imprimir representação do grafo");
+    Console.WriteLine("1 - Imprimir representação do grafo");
+    Console.WriteLine("1 - Imprimir representação do grafo");
+    // Adicione as outras 14 opções do trabalho aqui
+    /*
+10. Busca em grafos (Busca em Largura): O vértice inicial será dado pelo usuário e
+a respectiva árvore de busca deve ser gerada assim como o nível de cada vértice
+na árvore (nível da raiz é zero), além de apresentar os predecessores. Use a
+ordem numérica crescente para escolher entre os vértices adjacentes.
+11. Busca em grafos (Busca em Profundidade): O vértice inicial será dado pelo
+usuário e a respectiva árvore de busca deve ser gerada assim como a distância
+de descoberta e de finalização de cada vértice na árvore (nível da raiz é zero).
+Use a ordem numérica crescente para escolher entre os vértices adjacentes.
+12. Implementar o Algoritmo de Dijkstra. Este algoritmo, a partir de um vértice origem
+o e um vértice destino d, encontra o caminho mínimo entre eles. Deverá ser
+impresso a rota utilizada, ou seja, os vértices utilizados no caminho mínimo entre
+o e d, com os respectivos pesos de cada aresta do caminho.
+13. Implementar o Algoritmo de Floyd Warshall. Este algoritmo, a partir de um
+vértice origem o, encontra o caminho mínimo entre o vértice o e todos os demais
+vértices do grafo.
+14. Criação de um menu onde o usuário poderá interagir com a aplicação
+    */
+    // ...
+    Console.WriteLine("16 - Descartar grafo e voltar");
+    Console.WriteLine("0 - Sair do Programa");
+    Console.Write("\nEscolha uma opção: ");
+}
+
+void ExibirMenuCriacao()
+{
+    Console.WriteLine("--- Menu de Criação de Grafo ---");
+    Console.WriteLine("Nenhum grafo carregado. Por favor, escolha uma opção:");
+    Console.WriteLine("1 - Importar Grafo de arquivo DIMACS");
+    Console.WriteLine("2 - Preencher manualmente");
+    Console.WriteLine("0 - Sair");
+    Console.Write("\nEscolha uma opção: ");
+}
+
+int LerVertice()
+{
+    Console.WriteLine("Qual a vertice desejado?");
+    int verticeDesejado = int.Parse(Console.ReadLine());
+
+    return verticeDesejado;
+}
+
+int LerAresta()
+{
+    Console.WriteLine("Qual a aresta desejada?");
+    int arestaDesejada = int.Parse(Console.ReadLine());
+
+    return arestaDesejada;
+
 }
