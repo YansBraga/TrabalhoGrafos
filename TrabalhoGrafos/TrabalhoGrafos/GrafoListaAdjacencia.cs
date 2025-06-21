@@ -14,23 +14,42 @@ namespace TrabalhoGrafos
 
         public GrafoListaAdjacencia(int numVertices)
         {
-            //lista = new List<(int, int)>[numVertices];
-
-            // Inicializa uma lista vazia para cada vértice.
+            _vertices = new List<Vertice>();
             for (int i = 0; i < numVertices; i++)
             {
-                //  lista[i] = new List<(int, int)>();
+                _vertices.Add(new Vertice("V" + i));
             }
         }
 
-        void IGrafo.AdicionarAresta(int origem, int destino, int peso)
+        public void AdicionarAresta(int origem, int destino, int peso)
         {
-            throw new NotImplementedException();
+            if (origem < 0 || origem >= NumeroVertices || destino < 0 || destino >= NumeroVertices)
+            {
+                throw new ArgumentOutOfRangeException("Os índices de origem ou destino estão fora do intervalo.");
+            }
+            if (!_vertices[origem].AdicionarArestaSaindo(_vertices[destino], peso))
+            {
+                Console.WriteLine("Aresta já existe entre os vértices.");
+            }
+            else
+            {
+                NumeroArestas++;
+            }
         }
 
-        void IGrafo.Imprimir()
+        public string Imprimir()
         {
-            throw new NotImplementedException();
+            StringBuilder sb = new StringBuilder();
+            foreach (var vertice in _vertices)
+            {
+                sb.AppendLine(vertice.ToString());
+            }
+            return sb.ToString();
         }
+
+        public List<Aresta> GetArestasSaindo(int numVertice)
+    {
+        return _vertices[numVertice].ArestasSaindo.ToList();
+    }
     }
 }
