@@ -1,15 +1,18 @@
 ﻿using System.Text;
 
+
 namespace TrabalhoGrafos
 {
     internal class Program
     {
         static void Main(string[] args)
         {
-            Grafo grafo = null; 
+            string? grafo = null; 
             bool sair = false;
             int arestas = 0;
             int vertices = 0;
+
+
 
 
             while (!sair)
@@ -26,7 +29,7 @@ namespace TrabalhoGrafos
                             case 1:
                                 Console.Write("Digite o caminho do arquivo DIMACS: ");
                                 string caminhoArquivo = Console.ReadLine();                                
-                                grafo = new Grafo(0); // Inicializa o grafo com 0 vértices
+                                //grafo = new Grafo(0); // Inicializa o grafo com 0 vértices
                                 break;
                             case 2:
                                 Console.WriteLine("Insira a quantidade de vértices e arestas respectivamente: ");
@@ -35,12 +38,13 @@ namespace TrabalhoGrafos
 
 
 
-                                grafo = new Grafo(vertices, arestas);
+                                //grafo = new Grafo(vertices, arestas);
 
                                 ExibirMenuPrincipal();
                                 break;
                             case 3:
-                                sair = true; // Define a flag para sair do loop
+
+                                
                                 break;
                             default:
                                 Console.WriteLine("Opção inválida. Tente novamente.");
@@ -107,8 +111,10 @@ namespace TrabalhoGrafos
             Console.WriteLine("Nenhum grafo carregado. Por favor, escolha uma opção:");
             Console.WriteLine("1 - Importar Grafo de arquivo DIMACS");
             Console.WriteLine("2 - Preencher manualmente");
-            Console.WriteLine("3 - Sair");
+            Console.WriteLine("3 - Desafio");
+            Console.WriteLine("4 - Sair");
             Console.Write("\nEscolha uma opção: ");
         }
-    }
+            
+    }        
 }

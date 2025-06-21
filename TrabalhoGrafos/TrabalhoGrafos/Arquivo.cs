@@ -10,16 +10,16 @@ namespace TrabalhoGrafos
     public class Arquivo
     {        
         private string caminho { get; set; }
-        public Grafo grafo { get; set; }
+        //public Grafo grafo { get; set; }
 
         
         public Arquivo(string caminho)
         {            
-            grafo = ImportarArquivo();
+            //grafo = ImportarArquivo();
             this.caminho = caminho;
         }
 
-        private Grafo ImportarArquivo()
+        private string ImportarArquivo()
         {
             try
             {
@@ -30,7 +30,7 @@ namespace TrabalhoGrafos
                 int numVertices = int.Parse(primeiraLinha[0]);
 
                 // Cria o objeto Grafo com o número de vértices encontrado
-                Grafo grafo = new Grafo(numVertices);
+                //Grafo grafo = new Grafo(numVertices);
 
                 // Processa as linhas das arestas (pula a primeira linha, i=1)
                 for (int i = 1; i < linhas.Length; i++)
@@ -41,11 +41,11 @@ namespace TrabalhoGrafos
                     int peso = int.Parse(dadosAresta[2]);
 
                     // Adiciona a aresta ao nosso objeto grafo
-                    grafo.AdicionarAresta(origem, destino, peso);
+                    //grafo.AdicionarAresta(origem, destino, peso);
                 }
 
                 Console.WriteLine("Arquivo lido e grafo construído com sucesso!");
-                return grafo;
+                return "";
             }
             catch (FileNotFoundException)
             {
