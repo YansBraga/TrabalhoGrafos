@@ -7,55 +7,46 @@ using System.Threading.Tasks;
 
 namespace TrabalhoGrafos
 {
-    public class Arquivo
-    {        
-        private string caminho { get; set; }
-        //public Grafo grafo { get; set; }
-
-        
-        public Arquivo(string caminho)
-        {            
-            //grafo = ImportarArquivo();
-            this.caminho = caminho;
-        }
-
-        private string ImportarArquivo()
+    public static class Arquivo
+    {   
+        public static string ImportarArquivo()
         {
             try
             {
-                // Lê todas as linhas do arquivo de uma vez
-                string[] linhas = File.ReadAllLines(caminho);
+                // Lê todas as linhas do arquivo de uma vez                
+
+                var projetoDir = Directory.GetParent(AppContext.BaseDirectory)      // ...\bin\Debug\net8.0
+                         .Parent                                   // ...\bin\Debug
+                         .Parent                                   // ...\bin
+                         .Parent                                   // ...\<pasta do projeto>
+                         .FullName;
+
+                string path = Path.Combine(projetoDir, "grafo.dimacs");
+
+                string[] linhas = File.ReadAllLines(path);                
                 
                 string[] primeiraLinha = linhas[0].Split(' ');
                 int numVertices = int.Parse(primeiraLinha[0]);
+                int numArestas = int.Parse(primeiraLinha[1]);
 
-                // Cria o objeto Grafo com o número de vértices encontrado
-                //Grafo grafo = new Grafo(numVertices);
-
-                // Processa as linhas das arestas (pula a primeira linha, i=1)
+                // Processa as linhas das arestas
                 for (int i = 1; i < linhas.Length; i++)
                 {                    
                     string[] dadosAresta = linhas[i].Split(' ');
                     int origem = int.Parse(dadosAresta[0]);
                     int destino = int.Parse(dadosAresta[1]);
-                    int peso = int.Parse(dadosAresta[2]);
-
-                    // Adiciona a aresta ao nosso objeto grafo
-                    //grafo.AdicionarAresta(origem, destino, peso);
+                    int peso = int.Parse(dadosAresta[2]);                    
                 }
 
-                Console.WriteLine("Arquivo lido e grafo construído com sucesso!");
-                return "";
+                return "Arquivo lido e grafo construído com sucesso!";
             }
             catch (FileNotFoundException)
-            {
-                Console.WriteLine($"ERRO: O arquivo não foi encontrado em '{caminho}'. Verifique o caminho e tente novamente.");
-                return null;
+            {                
+                return "ERRO: O arquivo não foi encontrado. Verifique o caminho e tente novamente.";
             }
             catch (Exception ex)
-            {
-                Console.WriteLine($"ERRO inesperado ao ler o arquivo: {ex.Message}");
-                return null;
+            {                
+                return $"ERRO inesperado ao ler o arquivo: {ex.Message}";
             }
         }
     }
