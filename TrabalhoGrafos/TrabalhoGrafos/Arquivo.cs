@@ -13,8 +13,7 @@ namespace TrabalhoGrafos
         {
             try
             {
-                // Lê todas as linhas do arquivo de uma vez                
-
+                // Obtém o diretório do projeto, assumindo que o arquivo está na raiz do projeto
                 var projetoDir = Directory.GetParent(AppContext.BaseDirectory)      // ...\bin\Debug\net8.0
                          .Parent                                   // ...\bin\Debug
                          .Parent                                   // ...\bin
@@ -22,7 +21,6 @@ namespace TrabalhoGrafos
                          .FullName;
 
                 string path = Path.Combine(projetoDir, "grafo.dimacs");
-
                 string[] linhas = File.ReadAllLines(path);                
                 
                 string[] primeiraLinha = linhas[0].Split(' ');
@@ -37,6 +35,8 @@ namespace TrabalhoGrafos
                     int destino = int.Parse(dadosAresta[1]);
                     int peso = int.Parse(dadosAresta[2]);                    
                 }
+
+                Representacao representacao = SelecionadorTipoGrafo.Choose(numVertices, numArestas);
 
                 return "Arquivo lido e grafo construído com sucesso!";
             }

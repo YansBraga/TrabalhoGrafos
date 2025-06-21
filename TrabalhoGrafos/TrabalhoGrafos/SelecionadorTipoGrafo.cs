@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TrabalhoGrafos
 {
-    public static class SelecionadorGrafo
+    public static class SelecionadorTipoGrafo
     {
         public static double criterioProx = 0.5;
 
@@ -22,15 +22,10 @@ namespace TrabalhoGrafos
         }
 
         /// <summary>
-        /// Escolhe a representação conforme o número de arestas e a densidade:
-        /// - Se edges <= vertices: Matriz de Incidência.
-        /// - Senão, compara densidade com Threshold: ListaAdjacencia ou MatrizAdjacencia.
+        /// Escolhe a representação conforme o número de arestas e a densidade:                
         /// </summary>
         public static Representacao Choose(int vertices, int arestas)
-        {
-            if (arestas <= vertices)
-                return Representacao.MatrizIncidencia;
-
+        {            
             double densidade = CalcularDensidade(vertices, arestas);
             return densidade < criterioProx
                 ? Representacao.ListaAdjacencia
@@ -41,7 +36,6 @@ namespace TrabalhoGrafos
     public enum Representacao
     {
         ListaAdjacencia,
-        MatrizAdjacencia,
-        MatrizIncidencia
+        MatrizAdjacencia        
     }
 }
