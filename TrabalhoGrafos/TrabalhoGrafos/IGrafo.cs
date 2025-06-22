@@ -22,5 +22,9 @@ namespace TrabalhoGrafos
         int GrauVertice(Vertice v);
         bool IsAdjascente(Vertice v1, Vertice v2);
 
+        string Dijkstra(Vertice origem, Vertice destino);
+
+        public string FloydWarshall();
+
     }
 }
