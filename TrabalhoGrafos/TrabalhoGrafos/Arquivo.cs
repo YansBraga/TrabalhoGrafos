@@ -43,6 +43,8 @@ namespace TrabalhoGrafos
                 }
 
                 vertices = arestas.Select(a => a.Origem).Distinct().ToList();
+                vertices.AddRange(arestas.Select(a => a.Destino).Distinct().ToList());
+                //vertices = vertices.Distinct(i  i.Nome);
 
                 Representacao representacao = SelecionadorTipoGrafo.Choose(numVertices, numArestas);                
 
