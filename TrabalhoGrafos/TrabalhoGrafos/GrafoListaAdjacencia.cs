@@ -52,18 +52,10 @@ namespace TrabalhoGrafos
             StringBuilder sb = new StringBuilder();
             foreach (Vertice v in _vertices)
             {
-                sb.Append(v.Nome).Append(": ");
+                sb.Append(v.Id).Append(": ");
                 sb.AppendLine(string.Join(", ", v.ArestasSaindo.Select(a => a.ToString())));
             }
             return sb.ToString();
-        }
-
-        /// <summary>
-        /// Retorna todas as arestas saindo do vértice <paramref name="indiceVertice"/>.
-        /// </summary>
-        public List<Aresta> GetArestasSaindo(int indiceVertice)
-        {            
-            return _vertices[indiceVertice].ArestasSaindo.ToList();
         }
 
         List<Vertice> IGrafo.VerticesAdjascentes(Vertice v)
