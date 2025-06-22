@@ -8,6 +8,7 @@ namespace TrabalhoGrafos
     {
         public int NumeroVertices { get; private set; }
         public int NumeroArestas { get; private set; }
+
         private int[,] _matrizAdjacencia;
 
         public GrafoMatrizAdjacencia(int numVertices)
@@ -25,12 +26,8 @@ namespace TrabalhoGrafos
         }
 
         void IGrafo.AdicionarAresta(Vertice origem, Vertice destino, int peso)
-        {
-            if (origem.Id < 0 || origem.Id >= NumeroVertices || destino.Id < 0 || destino.Id >= NumeroVertices)
-            {
-                throw new ArgumentOutOfRangeException("Os índices dos vértices estão fora do intervalo.");
-            }
-            else if (_matrizAdjacencia[origem.Id, destino.Id] == -1) // Verifica se a aresta não existe
+        {            
+            if (_matrizAdjacencia[origem.Id, destino.Id] == -1) // Verifica se a aresta não existe
             {
                 _matrizAdjacencia[origem.Id, destino.Id] = peso;
                 NumeroArestas++;
@@ -97,6 +94,41 @@ namespace TrabalhoGrafos
         public override string ToString()
         {
             return "Matriz de Adjacência";
+        }
+
+        List<Aresta> IGrafo.ArestasAdjascentes(Vertice v1, Vertice v2)
+        {
+            throw new NotImplementedException();
+        }
+
+        List<Aresta> IGrafo.ArestasIncidentes(Vertice v)
+        {
+            throw new NotImplementedException();
+        }
+
+        List<Vertice> IGrafo.VerticesIncidentes(Aresta aresta)
+        {
+            throw new NotImplementedException();
+        }
+
+        Vertice IGrafo.LocalizarVertice(string v)
+        {
+            throw new NotImplementedException();
+        }
+
+        Aresta IGrafo.LocalizarAresta(Vertice origem, Vertice destino)
+        {
+            throw new NotImplementedException();
+        }
+
+        int IGrafo.GrauVertice(Vertice v)
+        {
+            throw new NotImplementedException();
+        }
+
+        bool IGrafo.IsAdjascente(Vertice v1, Vertice v2)
+        {
+            throw new NotImplementedException();
         }
     }
 }

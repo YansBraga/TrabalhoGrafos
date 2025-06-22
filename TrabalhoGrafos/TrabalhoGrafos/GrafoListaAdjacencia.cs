@@ -58,7 +58,7 @@ namespace TrabalhoGrafos
             return sb.ToString();
         }
 
-        List<Vertice> IGrafo.VerticesAdjascentes(Vertice v)
+        public List<Vertice> VerticesAdjascentes(Vertice v)
         {
             Vertice verticeLocalizado = LocalizarVertice(v.Nome);
 
@@ -85,7 +85,7 @@ namespace TrabalhoGrafos
             return vertice;
         }
 
-        Aresta IGrafo.LocalizarAresta(Vertice origem, Vertice destino)
+        public Aresta LocalizarAresta(Vertice origem, Vertice destino)
         {
             var v = LocalizarVertice(origem.Nome);
             return v?.ArestasSaindo.FirstOrDefault(a => a.Destino.Nome == destino.Nome);
@@ -96,7 +96,7 @@ namespace TrabalhoGrafos
             return "Lista de Adjacência";
         }
 
-        List<Aresta> IGrafo.ArestasAdjascentes(Vertice v1, Vertice v2)
+        public List<Aresta> ArestasAdjascentes(Vertice v1, Vertice v2)
         {
             List<Aresta> arestas = new List<Aresta>();
 
@@ -106,7 +106,7 @@ namespace TrabalhoGrafos
             return arestas;
         }
 
-        List<Aresta> IGrafo.ArestasIncidentes(Vertice v)
+        public List<Aresta> ArestasIncidentes(Vertice v)
         {
             Vertice verticeLocalizado = null;
             List<Aresta> arestasIncidentes = new List<Aresta>();
@@ -122,7 +122,7 @@ namespace TrabalhoGrafos
             return arestasIncidentes;
         }
 
-        List<Vertice> IGrafo.VerticesIncidentes(Aresta aresta)
+        public List<Vertice> VerticesIncidentes(Aresta aresta)
         {
             List<Vertice> verticesIncidentes = new List<Vertice>();        
 
@@ -138,14 +138,14 @@ namespace TrabalhoGrafos
             return verticesIncidentes;
         }
 
-        int IGrafo.GrauVertice(Vertice v)
+        public int GrauVertice(Vertice v)
         {
             Vertice verticeLocalizado = LocalizarVertice(v.Nome);
             int grau = verticeLocalizado.ArestasSaindo.Count + verticeLocalizado.ArestasEntrantes.Count;
             return grau;
         }
 
-        bool IGrafo.IsAdjascente(Vertice v1, Vertice v2)
+        public bool IsAdjascente(Vertice v1, Vertice v2)
         {
             Vertice vertice1 = LocalizarVertice(v1.Nome);
             Vertice vertice2 = LocalizarVertice(v2.Nome);
@@ -155,6 +155,47 @@ namespace TrabalhoGrafos
 
             return isAdjascente1 || isAdjascente2;
         }
+
+        public void SubstituirPeso(Aresta aresta, int peso)
+        {
+            Aresta aresta1 = LocalizarAresta(aresta.Origem, aresta.Destino);
+            aresta.Peso = peso;
+        }
+
+        public bool TrocarVertices(Vertice v1, Vertice v2)
+        {
+            
+            var vert1 = LocalizarVertice(v1.Nome);
+            var vert2 = LocalizarVertice(v2.Nome);
+            if (vert1 == null || vert2 == null) return false;
+
+            
+            var tempSaida = vert1.ArestasSaindo;
+
+            vert1.setArestasSaindo(vert2.ArestasSaindo);
+            vert2.setArestasSaindo(tempSaida);
+
+            
+            foreach (var u in _vertices.Values)
+            {
+                foreach (var a in u.ArestasSaindo)
+                {
+                    if (a.Destino == vert1) a.Destino = vert2;
+                    else if (a.Destino == vert2) a.Destino = vert1;
+                }
+            }
+
+            
+            foreach (var u in _vertices.Values)
+                u.ArestasEntrantes.Clear();
+
+            foreach (var u in _vertices.Values)
+                foreach (var a in u.ArestasSaindo)
+                    a.Destino.ArestasEntrantes.Add(a);
+
+            return true;
+        }
+
     }
 }
         

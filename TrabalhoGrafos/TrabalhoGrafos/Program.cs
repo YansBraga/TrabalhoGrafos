@@ -104,14 +104,35 @@ namespace TrabalhoGrafos
                                 break;
 
                             case 7: //  Determinar se dois vértices são adjacentes
-                                LerAresta();
+                                if(grafo.IsAdjascente(LerVertice(), LerVertice()))                                
+                                    Console.WriteLine("Os vértices são adjacentes.");                                
+                                else                                
+                                    Console.WriteLine("Os vértices não são adjacentes.");                                                                
                                 break;
 
                             case 8: //  Substituir o peso de uma aresta a, informada pelo usuário
-                                LerAresta();
+                                Console.WriteLine("Insira o novo peso da aresta:");
+                                if (int.TryParse(Console.ReadLine(), out int novoPeso))
+                                {
+                                    grafo.SubstituirPeso(LerAresta(), novoPeso);
+                                    Console.WriteLine("Peso da aresta atualizado com sucesso.");
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Entrada inválida. Por favor, insira um número.");
+                                }                                
+                                break;
+                            case 9: //  Trocar dois vértices
+                                Vertice v1 = LerVertice();
+                                Vertice v2 = LerVertice();
+
+                                if (grafo.TrocarVertices(v1, v2))
+                                    Console.WriteLine($"Vértices {v1} e {v2} trocados com sucesso.");
+                                else
+                                    Console.WriteLine("Falha ao trocar os vértices. Verifique se ambos existem no grafo.");
                                 break;
 
-                            case 16: // Opção para voltar ao menu anterior
+                            case 14: // Opção para voltar ao menu anterior
                                 grafo = null; // Descarta o grafo atual
                                 Console.WriteLine("Retornando ao menu de criação de grafo.");
                                 break;

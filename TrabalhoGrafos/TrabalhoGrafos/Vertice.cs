@@ -14,8 +14,18 @@ public class Vertice
         _arestasSaindo = new List<Aresta>();
     }
 
-    public IReadOnlyList<Aresta> ArestasEntrantes => _arestasEntrantes.AsReadOnly();
-    public IReadOnlyList<Aresta> ArestasSaindo => _arestasSaindo.AsReadOnly();
+    public List<Aresta> ArestasEntrantes => _arestasEntrantes;
+    public List<Aresta> ArestasSaindo => _arestasSaindo;
+
+    public void setArestasEntrantes(List<Aresta> arestas)
+    {
+        _arestasEntrantes = arestas;
+    }
+
+    public void setArestasSaindo(List<Aresta> arestas)
+    {
+        _arestasSaindo = arestas;
+    }
 
     public string Nome => _nome;
 

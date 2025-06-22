@@ -21,6 +21,8 @@ namespace TrabalhoGrafos
 
         int GrauVertice(Vertice v);
         bool IsAdjascente(Vertice v1, Vertice v2);
+        void SubstituirPeso(Aresta aresta, int peso);
+        bool TrocarVertices(Vertice v1, Vertice v2);
 
     }
 }
