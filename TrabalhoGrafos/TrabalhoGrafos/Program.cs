@@ -9,7 +9,7 @@ namespace TrabalhoGrafos
         public static IGrafo grafo = null;
 
         static void Main(string[] args)
-        {            
+        {
             bool sair = false;
             int arestas = 0;
             int vertices = 0;
@@ -26,13 +26,13 @@ namespace TrabalhoGrafos
                         switch (opcaoCriacao)
                         {
                             case 1:
-                                Console.WriteLine("Importando grafo do arquivo DIMACS...");                                                                
+                                Console.WriteLine("Importando grafo do arquivo DIMACS...");
                                 grafo = Arquivo.ImportarArquivo();
 
-                                if (grafo != null)                                
-                                    Console.WriteLine($"Grafo importado com sucesso! \nRepresentação: {grafo.ToString()}");                                                                                                  
-                                else                                
-                                    Console.WriteLine("Falha ao importar o grafo. Tente novamente.");                                
+                                if (grafo != null)
+                                    Console.WriteLine($"Grafo importado com sucesso! \nRepresentação: {grafo.ToString()}");
+                                else
+                                    Console.WriteLine("Falha ao importar o grafo. Tente novamente.");
 
                                 break;
                             case 2:
@@ -45,7 +45,7 @@ namespace TrabalhoGrafos
                                 if (grafo != null)
                                     Console.WriteLine($"Grafo criado com sucesso! \nRepresentação: {grafo.ToString()}");
                                 else
-                                    Console.WriteLine("Falha ao importar o grafo. Tente novamente.");                                
+                                    Console.WriteLine("Falha ao importar o grafo. Tente novamente.");
                                 break;
                             case 3:
 
@@ -71,7 +71,7 @@ namespace TrabalhoGrafos
                         switch (opcaoPrincipal)
                         {
                             case 1: //  Leitura e impressão de um grafo já pronto. Nesse caso, vocês deverão ler um grafo de entrada no formato DIMACS 1. O grafo a ser lido, deve ser representado em uma Lista de Adjacência, Matriz de Adjacência ou Matriz de Incidência.
-                                    Console.WriteLine(grafo.Imprimir());
+                                Console.WriteLine(grafo.Imprimir());
                                 break;
 
                             case 2: //  Imprimir todas as arestas adjacentes a uma aresta a, informada pelo usuário.
@@ -80,11 +80,11 @@ namespace TrabalhoGrafos
                                 if (a != null)
                                 {
                                     Console.WriteLine($"Arestas adjacentes à aresta {a}:");
-                                    grafo.ArestasAdjascentes(a.Origem, a.Destino).ForEach(v => Console.WriteLine(v));                                    
+                                    grafo.ArestasAdjascentes(a.Origem, a.Destino).ForEach(v => Console.WriteLine(v));
                                 }
-                                else                                    
+                                else
                                     Console.WriteLine("Aresta não encontrada.");
-                                
+
                                 break;
 
                             case 3: //  Imprimir todos os vértices adjacentes a um vértice v, informado pelo usuário.                    
@@ -108,6 +108,14 @@ namespace TrabalhoGrafos
                                 break;
 
                             case 8: //  Substituir o peso de uma aresta a, informada pelo usuário
+                                LerAresta();
+                                break;
+
+                            case 10: //  Busca em grafos (Busca em Largura)
+                                LerAresta();
+                                break;
+
+                            case 11: //  Busca em grafos (Busca em Profundidade)
                                 LerAresta();
                                 break;
 
@@ -197,7 +205,7 @@ namespace TrabalhoGrafos
         public static Vertice LerVertice()
         {
             Console.WriteLine("Qual a vertice desejado?");
-            string verticeDesejado = Console.ReadLine();
+            string verticeDesejado = int.Parse(Console.ReadLine());
 
             Vertice v = grafo.LocalizarVertice(verticeDesejado);
 
@@ -231,6 +239,16 @@ namespace TrabalhoGrafos
                 return LerAresta();
             }
 
+        }
+
+        public static void BuscaLargura(Vertice v)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static void BuscaProfundidade(Vertice v)
+        {
+            throw new NotImplementedException();
         }
     }
 }

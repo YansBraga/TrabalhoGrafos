@@ -5,11 +5,11 @@ public class Vertice
 {
     private List<Aresta> _arestasEntrantes;
     private List<Aresta> _arestasSaindo;
-    private string _nome;
+    private int _id;
 
-    public Vertice(string nome)
+    public Vertice(int nome)
     {
-        _nome = nome;
+        _id = nome;
         _arestasEntrantes = new List<Aresta>();
         _arestasSaindo = new List<Aresta>();
     }
@@ -17,7 +17,7 @@ public class Vertice
     public IReadOnlyList<Aresta> ArestasEntrantes => _arestasEntrantes.AsReadOnly();
     public IReadOnlyList<Aresta> ArestasSaindo => _arestasSaindo.AsReadOnly();
 
-    public string Nome => _nome;
+    public int Id => _id;
 
     public bool AdicionarArestaEntrando(Vertice origem, int peso)
     {
@@ -54,6 +54,6 @@ public class Vertice
             sb.AppendLine(aresta.ToString());
         }
 
-        return _nome + "\n" + sb.ToString();
+        return _id + "\n" + sb.ToString();
     }
 }

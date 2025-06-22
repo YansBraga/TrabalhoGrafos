@@ -9,7 +9,7 @@ namespace TrabalhoGrafos
 {
     public class GrafoListaAdjacencia : IGrafo
     {
-        private Dictionary<string, Vertice> _vertices;
+        private Dictionary<int, Vertice> _vertices;
         public int NumeroVertices { get; }
         public int NumeroArestas { get; private set; }
 
@@ -21,7 +21,7 @@ namespace TrabalhoGrafos
             if (vertices == null)
                 throw new ArgumentNullException(nameof(vertices));
 
-            _vertices = vertices.ToDictionary(v => v.Nome, v => v);
+            _vertices = vertices.ToDictionary(v => v.Id, v => v);
 
             NumeroArestas = 0;
             NumeroVertices = vertices.Count;
@@ -37,7 +37,7 @@ namespace TrabalhoGrafos
         /// </summary>
         public void AdicionarAresta(Vertice origem, Vertice destino, int peso)
         {
-            bool added = LocalizarVertice(origem.Nome)?.AdicionarArestaSaindo(destino, peso) ?? false;
+            bool added = LocalizarVertice(origem.Id)?.AdicionarArestaSaindo(destino, peso) ?? false;
             if (added)
                 NumeroArestas++;
             else
@@ -52,7 +52,7 @@ namespace TrabalhoGrafos
             StringBuilder sb = new StringBuilder();
             foreach (Vertice v in _vertices.Values)
             {
-                sb.Append(v.Nome).Append(": ");
+                sb.Append(v.Id).Append(": ");
                 sb.AppendLine(string.Join(", ", v.ArestasSaindo.Select(a => a.ToString())));
             }
             return sb.ToString();
@@ -60,7 +60,7 @@ namespace TrabalhoGrafos
 
         List<Vertice> IGrafo.VerticesAdjascentes(Vertice v)
         {
-            Vertice verticeLocalizado = LocalizarVertice(v.Nome);
+            Vertice verticeLocalizado = LocalizarVertice(v.Id);
 
             if (verticeLocalizado != null)
             {
@@ -76,7 +76,7 @@ namespace TrabalhoGrafos
         /// </summary>
         /// <param name="v"></param>
         /// <returns></returns>
-        public Vertice LocalizarVertice(string v)
+        public Vertice LocalizarVertice(int v)
         {
             Vertice vertice = null;
 
@@ -87,8 +87,8 @@ namespace TrabalhoGrafos
 
         Aresta IGrafo.LocalizarAresta(Vertice origem, Vertice destino)
         {
-            var v = LocalizarVertice(origem.Nome);
-            return v?.ArestasSaindo.FirstOrDefault(a => a.Destino.Nome == destino.Nome);
+            var v = LocalizarVertice(origem.Id);
+            return v?.ArestasSaindo.FirstOrDefault(a => a.Destino.Id == destino.Id);
         }
 
         public override string ToString()
@@ -100,8 +100,8 @@ namespace TrabalhoGrafos
         {
             List<Aresta> arestas = new List<Aresta>();
 
-            arestas.AddRange(LocalizarVertice(v1.Nome)?.ArestasSaindo);
-            arestas.AddRange(LocalizarVertice(v2.Nome)?.ArestasSaindo);
+            arestas.AddRange(LocalizarVertice(v1.Id)?.ArestasSaindo);
+            arestas.AddRange(LocalizarVertice(v2.Id)?.ArestasSaindo);
 
             return arestas;
         }
@@ -111,7 +111,7 @@ namespace TrabalhoGrafos
             Vertice verticeLocalizado = null;
             List<Aresta> arestasIncidentes = new List<Aresta>();
 
-            _vertices.TryGetValue(v.Nome, out verticeLocalizado);
+            _vertices.TryGetValue(v.Id, out verticeLocalizado);
 
             if (verticeLocalizado != null)
             {
@@ -126,8 +126,8 @@ namespace TrabalhoGrafos
         {
             List<Vertice> verticesIncidentes = new List<Vertice>();        
 
-            Vertice origem = LocalizarVertice(aresta.Origem.Nome);
-            Vertice destino = LocalizarVertice(aresta.Destino.Nome);
+            Vertice origem = LocalizarVertice(aresta.Origem.Id);
+            Vertice destino = LocalizarVertice(aresta.Destino.Id);
 
             if (origem != null && destino != null)
             {
@@ -140,18 +140,18 @@ namespace TrabalhoGrafos
 
         int IGrafo.GrauVertice(Vertice v)
         {
-            Vertice verticeLocalizado = LocalizarVertice(v.Nome);
+            Vertice verticeLocalizado = LocalizarVertice(v.Id);
             int grau = verticeLocalizado.ArestasSaindo.Count + verticeLocalizado.ArestasEntrantes.Count;
             return grau;
         }
 
         bool IGrafo.IsAdjascente(Vertice v1, Vertice v2)
         {
-            Vertice vertice1 = LocalizarVertice(v1.Nome);
-            Vertice vertice2 = LocalizarVertice(v2.Nome);
+            Vertice vertice1 = LocalizarVertice(v1.Id);
+            Vertice vertice2 = LocalizarVertice(v2.Id);
 
-            bool isAdjascente1 = vertice1?.ArestasSaindo.Any(a => a.Destino.Nome == vertice2.Nome) ?? false;
-            bool isAdjascente2 = vertice2?.ArestasSaindo.Any(a => a.Destino.Nome == vertice1.Nome) ?? false;
+            bool isAdjascente1 = vertice1?.ArestasSaindo.Any(a => a.Destino.Id == vertice2.Id) ?? false;
+            bool isAdjascente2 = vertice2?.ArestasSaindo.Any(a => a.Destino.Id == vertice1.Id) ?? false;
 
             return isAdjascente1 || isAdjascente2;
         }
