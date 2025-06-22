@@ -26,7 +26,7 @@ namespace TrabalhoGrafos
             NumeroArestas = arestas.Count;
             NumeroVertices = vertices.Count;
 
-            foreach (var item in arestas)
+            foreach (Aresta item in arestas)
             {
                 AdicionarAresta(item.Origem, item.Destino, item.Peso);
             }
