@@ -30,7 +30,7 @@ namespace TrabalhoGrafos
                                 grafo = Arquivo.ImportarArquivo();
 
                                 if (grafo != null)                                
-                                    Console.WriteLine("Grafo importado com sucesso!");                                
+                                    Console.WriteLine($"Grafo importado com sucesso! \nRepresentação: {grafo.ToString()}");                                                                                                  
                                 else                                
                                     Console.WriteLine("Falha ao importar o grafo. Tente novamente.");                                
 
@@ -42,7 +42,10 @@ namespace TrabalhoGrafos
 
                                 //grafo = new Grafo(vertices, arestas);
 
-                                ExibirMenuPrincipal();
+                                if (grafo != null)
+                                    Console.WriteLine($"Grafo criado com sucesso! \nRepresentação: {grafo.ToString()}");
+                                else
+                                    Console.WriteLine("Falha ao importar o grafo. Tente novamente.");                                
                                 break;
                             case 3:
 
@@ -68,11 +71,20 @@ namespace TrabalhoGrafos
                         switch (opcaoPrincipal)
                         {
                             case 1: //  Leitura e impressão de um grafo já pronto. Nesse caso, vocês deverão ler um grafo de entrada no formato DIMACS 1. O grafo a ser lido, deve ser representado em uma Lista de Adjacência, Matriz de Adjacência ou Matriz de Incidência.
-                                    //Console.WriteLine(grafo.Imprimir());
+                                    Console.WriteLine(grafo.Imprimir());
                                 break;
 
                             case 2: //  Imprimir todas as arestas adjacentes a uma aresta a, informada pelo usuário.
-                                LerAresta();
+                                Aresta a = LerAresta();
+
+                                if (a != null)
+                                {
+                                    Console.WriteLine($"Arestas adjacentes à aresta {a}:");
+                                    grafo.ArestasAdjascentes(a.Origem, a.Destino).ForEach(v => Console.WriteLine(v));                                    
+                                }
+                                else                                    
+                                    Console.WriteLine("Aresta não encontrada.");
+                                
                                 break;
 
                             case 3: //  Imprimir todos os vértices adjacentes a um vértice v, informado pelo usuário.                    
@@ -80,16 +92,15 @@ namespace TrabalhoGrafos
                                 break;
 
                             case 4: //  Imprimir todas as arestas incidentes a um vértice v, informado pelo usuário.
-                                LerVertice();
+                                grafo.ArestasIncidentes(LerVertice()).ForEach(a => Console.WriteLine(a));
                                 break;
 
                             case 5: //  Imprimir todos os vértices incidentes a uma aresta a, informada pelo usuário.
-                                LerAresta();
+                                grafo.VerticesIncidentes(LerAresta()).ForEach(v => Console.WriteLine(v));
                                 break;
 
-                            case 6: //  Imprimir o grau do vértice v, informado pelo usuário.
-                                LerVertice();
-                                // grafo.Imprimir();
+                            case 6: //  Imprimir o grau do vértice v, informado pelo usuário.                                
+                                Console.WriteLine($"Grau do vértice: {grafo.GrauVertice(LerVertice())}");
                                 break;
 
                             case 7: //  Determinar se dois vértices são adjacentes
@@ -186,7 +197,7 @@ namespace TrabalhoGrafos
         public static Vertice LerVertice()
         {
             Console.WriteLine("Qual a vertice desejado?");
-            int verticeDesejado = int.Parse(Console.ReadLine());
+            string verticeDesejado = Console.ReadLine();
 
             Vertice v = grafo.LocalizarVertice(verticeDesejado);
 
@@ -201,12 +212,24 @@ namespace TrabalhoGrafos
             }
         }
 
-        public static int LerAresta()
+        public static Aresta LerAresta()
         {
-            Console.WriteLine("Qual a aresta desejada?");
-            int arestaDesejada = int.Parse(Console.ReadLine());
+            Console.WriteLine("Insira os vértices referente a aresta escolhida?");
+            Vertice vertice1 = LerVertice();
+            Vertice vertice2 = LerVertice();
 
-            return arestaDesejada;
+            Aresta a = grafo.LocalizarAresta(vertice1, vertice2);
+
+
+            if (a != null)
+            {
+                return a;
+            }
+            else
+            {
+                Console.WriteLine("Aresta não encontrada. Por favor, tente novamente.");
+                return LerAresta();
+            }
 
         }
     }

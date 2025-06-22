@@ -93,5 +93,10 @@ namespace TrabalhoGrafos
             }
             return new Vertice(v);
         }
+
+        public override string ToString()
+        {
+            return "Matriz de Adjacência";
+        }
     }
 }

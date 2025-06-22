@@ -12,8 +12,15 @@ namespace TrabalhoGrafos
         int NumeroArestas { get; }
         void AdicionarAresta(Vertice origem, Vertice destino, int peso);
         string Imprimir();
-
         List<Vertice> VerticesAdjascentes(Vertice v);
-        Vertice LocalizarVertice(int v);
+        List<Aresta> ArestasAdjascentes(Vertice v1, Vertice v2);
+        List<Aresta> ArestasIncidentes(Vertice v);
+        List<Vertice> VerticesIncidentes(Aresta aresta);
+        Vertice LocalizarVertice(string v);
+        Aresta LocalizarAresta(Vertice origem, Vertice destino);        
+
+        int GrauVertice(Vertice v);
+        bool IsAdjascente(Vertice v1, Vertice v2);
+
     }
 }
