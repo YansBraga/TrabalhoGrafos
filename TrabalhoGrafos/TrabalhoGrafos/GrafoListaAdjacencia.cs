@@ -49,8 +49,8 @@ namespace TrabalhoGrafos
         /// </summary>
         public string Imprimir()
         {
-            var sb = new System.Text.StringBuilder();
-            foreach (var v in _vertices)
+            StringBuilder sb = new StringBuilder();
+            foreach (Vertice v in _vertices)
             {
                 sb.Append(v.Nome).Append(": ");
                 sb.AppendLine(string.Join(", ", v.ArestasSaindo.Select(a => a.ToString())));
@@ -66,24 +66,21 @@ namespace TrabalhoGrafos
             return _vertices[indiceVertice].ArestasSaindo.ToList();
         }
 
-        void IGrafo.Imprimir()
-        {
-            throw new NotImplementedException();
-        }
-
         List<Vertice> IGrafo.VerticesAdjascentes(Vertice v)
         {
-            throw new NotImplementedException();
+            Vertice verticeLocalizado = _vertices.FirstOrDefault(vertice => vertice.Equals(v));
+            if (verticeLocalizado != null)
+            {
+                return verticeLocalizado.ArestasSaindo.Select(a => a.Destino).ToList();
+            }
+            return new List<Vertice>();
         }
 
-        Vertice IGrafo.LocalizarVertice(int v)
+        public Vertice LocalizarVertice(int v)
         {
-            throw new NotImplementedException();
-        }
-
-        void IGrafo.AdicionarAresta(int origem, int destino, int peso)
-        {
-            throw new NotImplementedException();
+            if (v < 0 || v >= NumeroVertices)
+                throw new ArgumentOutOfRangeException("Índice do vértice fora dos limites.");
+            return _vertices[v];
         }
     }
 }
