@@ -26,5 +26,15 @@ namespace TrabalhoGrafos
         {
             throw new NotImplementedException();
         }
+
+        List<Vertice> IGrafo.VerticesAdjascentes(Vertice v)
+        {
+            throw new NotImplementedException();
+        }
+
+        Vertice IGrafo.LocalizarVertice(int v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

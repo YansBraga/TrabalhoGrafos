@@ -4,15 +4,18 @@ using TrabalhoGrafos;
 public class Vertice
 {
     private List<Aresta> _arestasEntrantes;
-    private List<Aresta> _arestasSaintes;
+    private List<Aresta> _arestasSaindo;
     private string _nome;
 
     public Vertice(string nome)
     {
         _nome = nome;
         _arestasEntrantes = new List<Aresta>();
-        _arestasSaintes = new List<Aresta>();
+        _arestasSaindo = new List<Aresta>();
     }
+
+    public IReadOnlyList<Aresta> ArestasEntrantes => _arestasEntrantes.AsReadOnly();
+    public IReadOnlyList<Aresta> ArestasSaindo => _arestasSaindo.AsReadOnly();
 
     public string Nome => _nome;
 
@@ -33,11 +36,11 @@ public class Vertice
     {
         Aresta novaAresta = new Aresta(this, destino, peso);
 
-        if (_arestasSaintes.Any(a => a.Destino == destino && a.Peso == peso))
+        if (_arestasSaindo.Any(a => a.Destino == destino && a.Peso == peso))
         {
             return false; // Aresta já existe
         }
-        _arestasSaintes.Add(novaAresta);
+        _arestasSaindo.Add(novaAresta);
 
         return true;
     }
@@ -46,7 +49,7 @@ public class Vertice
     {
         StringBuilder sb = new StringBuilder();
 
-        foreach (Aresta aresta in _arestasSaintes)
+        foreach (Aresta aresta in _arestasSaindo)
         {
             sb.AppendLine(aresta.ToString());
         }

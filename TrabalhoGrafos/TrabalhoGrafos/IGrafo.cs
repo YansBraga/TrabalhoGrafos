@@ -12,5 +12,8 @@ namespace TrabalhoGrafos
         int NumeroArestas { get; }
         void AdicionarAresta(int origem, int destino, int peso);
         void Imprimir();
+
+        List<Vertice> VerticesAdjascentes(Vertice v);
+        Vertice LocalizarVertice(int v);
     }
 }

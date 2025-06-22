@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 
 namespace TrabalhoGrafos
 {
-    public class GrafoListaAdjacencia : IGrafo
+    public class GrafoListaAdjacencia //: IGrafo
     {
+        private List<Vertice> _vertices;        
         public int NumeroVertices { get; }
-        public int NumeroArestas { get; }
+        public int NumeroArestas { get; set; }
 
         public GrafoListaAdjacencia(int numVertices)
         {
@@ -48,8 +49,9 @@ namespace TrabalhoGrafos
         }
 
         public List<Aresta> GetArestasSaindo(int numVertice)
-    {
-        return _vertices[numVertice].ArestasSaindo.ToList();
-    }
+        {
+            return _vertices[numVertice].ArestasSaindo.ToList();
+        }
     }
 }
+        
