@@ -26,9 +26,14 @@ namespace TrabalhoGrafos
                         switch (opcaoCriacao)
                         {
                             case 1:
-                                Console.Write("Digite o caminho do arquivo DIMACS: ");
-                                string caminhoArquivo = Console.ReadLine();
-                                //grafo = new Grafo(0); // Inicializa o grafo com 0 vértices
+                                Console.WriteLine("Importando grafo do arquivo DIMACS...");                                                                
+                                grafo = Arquivo.ImportarArquivo();
+
+                                if (grafo != null)                                
+                                    Console.WriteLine("Grafo importado com sucesso!");                                
+                                else                                
+                                    Console.WriteLine("Falha ao importar o grafo. Tente novamente.");                                
+
                                 break;
                             case 2:
                                 Console.WriteLine("Insira a quantidade de vértices e arestas respectivamente: ");
@@ -121,6 +126,7 @@ namespace TrabalhoGrafos
 
         public static void ExibirMenuPrincipal()
         {
+            Console.Clear();
             Console.WriteLine("--- Menu Principal (Grafo Carregado) ---");
             Console.WriteLine("Escolha uma operação para realizar no grafo:");
             Console.WriteLine("1. Imprimir representação do grafo");
