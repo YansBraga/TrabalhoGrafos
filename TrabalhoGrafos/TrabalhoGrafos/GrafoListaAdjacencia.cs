@@ -165,8 +165,8 @@ namespace TrabalhoGrafos
         public bool TrocarVertices(Vertice v1, Vertice v2)
         {
             
-            var vert1 = LocalizarVertice(v1.Nome);
-            var vert2 = LocalizarVertice(v2.Nome);
+            var vert1 = LocalizarVertice(v1.Id);
+            var vert2 = LocalizarVertice(v2.Id);
             if (vert1 == null || vert2 == null) return false;
 
             
@@ -194,6 +194,168 @@ namespace TrabalhoGrafos
                     a.Destino.ArestasEntrantes.Add(a);
 
             return true;
+        }
+
+        public string Dijkstra(Vertice origem, Vertice destino)
+        {
+            int[] distancias = new int[NumeroVertices];
+            Vertice[] predecessores = new Vertice[NumeroVertices];
+            bool[] visitados = new bool[NumeroVertices];
+
+            for (int i = 0; i < NumeroVertices; i++)
+            {
+                distancias[i] = int.MaxValue;
+                predecessores[i] = null;
+                visitados[i] = false;
+            }
+
+            distancias[origem.Id] = 0;
+
+            PriorityQueue<int, int> fila = new PriorityQueue<int, int>();
+            fila.Enqueue(origem.Id, 0);
+
+            while (fila.Count > 0)
+            {
+                int u = fila.Dequeue();
+
+                if (visitados[u] == false)
+                {
+                    visitados[u] = true;
+
+                    Vertice verticeAtual = LocalizarVertice(u);
+
+                    if (verticeAtual != null)
+                    {
+                        List<Aresta> arestas = verticeAtual.ArestasSaindo;
+
+                        for (int i = 0; i < arestas.Count; i++)
+                        {
+                            Aresta aresta = arestas[i];
+                            int v =aresta.Destino.Id;
+                            int peso = aresta.Peso;
+
+                            int novaDistancia = distancias[u] + peso;
+
+                            if (novaDistancia < distancias[v])
+                            {
+                                distancias[v] = novaDistancia;
+                                predecessores[v] = new Vertice(u);
+                                fila.Enqueue(v, novaDistancia);
+                            }
+                        }
+                    }
+                }
+            }
+
+            List<Vertice> caminho = new List<Vertice>();
+            Vertice atual = destino;
+
+            while (atual != null)
+            {
+                caminho.Insert(0, atual);
+                atual = predecessores[atual.Id];
+            }
+
+            if (distancias[destino.Id] == int.MaxValue)
+            {
+                return $"Não existe caminho entre {origem.Id} e {destino.Id}.";
+            }
+
+            StringBuilder resultado = new StringBuilder();
+            resultado.AppendLine($"Caminho mínimo de {origem.Id} para {destino.Id}:");
+
+            for (int i = 0; i < caminho.Count - 1; i++)
+            {
+                Vertice origemAresta = caminho[i];
+                Vertice destinoAresta = caminho[i + 1];
+
+                Aresta aresta = LocalizarAresta(origemAresta, destinoAresta);
+                int peso = aresta != null ? aresta.Peso : 0;
+
+                resultado.Append($"{origemAresta.Id} ({peso}) ");
+            }
+
+            resultado.Append($"{caminho[caminho.Count - 1].Id}");
+            resultado.AppendLine($"\nDistância total: {distancias[destino.Id]}");
+
+            return resultado.ToString();
+        }
+
+        public string FloydWarshall()
+        {
+            int quantidadeVertices = NumeroVertices;
+            int[,] distancias = new int[quantidadeVertices, quantidadeVertices];
+
+            for (int i = 0; i < quantidadeVertices; i++)
+            {
+                for (int j = 0; j < quantidadeVertices; j++)
+                {
+                    if (i == j)
+                    {
+                        distancias[i, j] = 0;
+                    }
+                    else
+                    {
+                        distancias[i, j] = int.MaxValue;
+                    }
+                }
+            }
+
+            for (int i = 0; i < _vertices.Count; i++)
+            {
+                Vertice verticeOrigem = _vertices[i];
+
+                List<Aresta> arestasSaindo = verticeOrigem.ArestasSaindo;
+
+                for (int j = 0; j < arestasSaindo.Count; j++)
+                {
+                    Aresta aresta = arestasSaindo[j];
+                    int origemId = verticeOrigem.Id;
+                    int destinoId = aresta.Destino.Id;
+
+                    distancias[origemId, destinoId] = aresta.Peso;
+                }
+            }
+
+            for (int k = 0; k < quantidadeVertices; k++)
+            {
+                for (int i = 0; i < quantidadeVertices; i++)
+                {
+                    for (int j = 0; j < quantidadeVertices; j++)
+                    {
+                        if (distancias[i, k] != int.MaxValue && distancias[k, j] != int.MaxValue)
+                        {
+                            int novaDistancia = distancias[i, k] + distancias[k, j];
+
+                            if (novaDistancia < distancias[i, j])
+                            {
+                                distancias[i, j] = novaDistancia;
+                            }
+                        }
+                    }
+                }
+            }
+
+            StringBuilder resultado = new StringBuilder();
+            resultado.AppendLine("Matriz de distâncias mínimas entre todos os pares de vértices:");
+
+            for (int i = 0; i < quantidadeVertices; i++)
+            {
+                for (int j = 0; j < quantidadeVertices; j++)
+                {
+                    if (distancias[i, j] == int.MaxValue)
+                    {
+                        resultado.Append("INF ");
+                    }
+                    else
+                    {
+                        resultado.Append(distancias[i, j]).Append(" ");
+                    }
+                }
+                resultado.AppendLine();
+            }
+
+            return resultado.ToString();
         }
 
     }

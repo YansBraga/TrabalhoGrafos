@@ -24,5 +24,8 @@ namespace TrabalhoGrafos
         void SubstituirPeso(Aresta aresta, int peso);
         bool TrocarVertices(Vertice v1, Vertice v2);
 
+        string Dijkstra(Vertice origem, Vertice destino);
+        string FloydWarshall();
+
     }
 }

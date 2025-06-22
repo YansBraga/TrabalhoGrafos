@@ -11,6 +11,6 @@
     }
     public override string ToString()
     {
-        return $"{Origem.Nome} -> {Destino.Nome} (Peso: {Peso})";
+        return $"{Origem.Id} -> {Destino.Id} (Peso: {Peso})";
     }
 }

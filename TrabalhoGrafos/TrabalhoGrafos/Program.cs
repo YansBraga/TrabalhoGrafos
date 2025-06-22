@@ -140,6 +140,37 @@ namespace TrabalhoGrafos
                                 LerAresta();
                                 break;
 
+                            case 12:
+                                Console.WriteLine("Digite o nome do vértice de origem:");
+                                Vertice verticeOrigemDijkstra = LerVertice();
+
+                                if (verticeOrigemDijkstra != null)
+                                {
+                                    Console.WriteLine("Digite o nome do vértice de destino:");
+                                    Vertice verticeDestinoDijkstra = LerVertice();
+
+                                    if (verticeDestinoDijkstra != null)
+                                    {
+                                        string resultadoDijkstra = grafo.Dijkstra(verticeOrigemDijkstra, verticeDestinoDijkstra);
+                                        Console.WriteLine(resultadoDijkstra);
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("O vértice de destino não foi encontrado.");
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("O vértice de origem não foi encontrado.");
+                                }
+
+                                break;
+
+                            case 13:
+                                string resultadoFloyd = grafo.FloydWarshall();
+                                Console.WriteLine(resultadoFloyd);
+                                break;
+
                             case 16: // Opção para voltar ao menu anterior
                                 grafo = null; // Descarta o grafo atual
                                 Console.WriteLine("Retornando ao menu de criação de grafo.");
@@ -226,7 +257,7 @@ namespace TrabalhoGrafos
         public static Vertice LerVertice()
         {
             Console.WriteLine("Qual a vertice desejado?");
-            string verticeDesejado = int.Parse(Console.ReadLine());
+            int verticeDesejado = int.Parse(Console.ReadLine());
 
             Vertice v = grafo.LocalizarVertice(verticeDesejado);
 

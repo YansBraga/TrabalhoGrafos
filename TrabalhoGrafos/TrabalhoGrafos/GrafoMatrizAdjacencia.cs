@@ -154,8 +154,7 @@ namespace TrabalhoGrafos
         }
         Aresta IGrafo.LocalizarAresta(Vertice origem, Vertice destino)
         {
-            if (origem.Id < 0 || origem.Id >= NumeroVertices ||
-        destino.Id < 0 || destino.Id >= NumeroVertices)
+            if (origem.Id < 0 || origem.Id >= NumeroVertices || destino.Id < 0 || destino.Id >= NumeroVertices)
             {
                 throw new ArgumentOutOfRangeException("Um ou ambos os índices dos vértices estão fora do intervalo.");
             }
@@ -205,6 +204,156 @@ namespace TrabalhoGrafos
             }
 
             return _matrizAdjacencia[v1.Id, v2.Id] != -1; // Retorna true se são adjacentes
+        }
+
+        public void SubstituirPeso(Aresta aresta, int peso)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool TrocarVertices(Vertice v1, Vertice v2)
+        {
+            throw new NotImplementedException();
+        }
+
+        //-----------------------------------Algoritmos-----------------------------------//
+        public string Dijkstra(Vertice origem, Vertice destino)
+        {
+            int[] distancias = new int[NumeroVertices];
+            Vertice[] predecessores = new Vertice[NumeroVertices];
+            bool[] visitados = new bool[NumeroVertices];
+
+            for (int i = 0; i < NumeroVertices; i++)
+            {
+                distancias[i] = int.MaxValue;
+                predecessores[i] = null;
+                visitados[i] = false;
+            }
+
+            distancias[origem.Id] = 0;
+
+            PriorityQueue<int, int> fila = new PriorityQueue<int, int>();
+            fila.Enqueue(origem.Id, 0);
+
+            while (fila.Count > 0)
+            {
+                int u = fila.Dequeue();
+
+                if (visitados[u] == false)
+                {
+                    visitados[u] = true;
+
+                    for (int v = 0; v < NumeroVertices; v++)
+                    {
+                        int peso = _matrizAdjacencia[u, v];
+
+                        if (peso != -1)
+                        {
+                            int novaDistancia = distancias[u] + peso;
+
+                            if (novaDistancia < distancias[v])
+                            {
+                                distancias[v] = novaDistancia;
+                                predecessores[v] = new Vertice(u);
+                                fila.Enqueue(v, novaDistancia);
+                            }
+                        }
+                    }
+                }
+            }
+
+            List<Vertice> caminho = new List<Vertice>();
+            Vertice atual = destino;
+
+            while (atual != null)
+            {
+                caminho.Insert(0, atual);
+                atual = predecessores[atual.Id];
+            }
+
+            if (distancias[destino.Id] == int.MaxValue)
+            {
+                return $"Não existe caminho entre {origem.Id} e {destino.Id}.";
+            }
+
+            StringBuilder resultado = new StringBuilder();
+            resultado.AppendLine($"Caminho mínimo de {origem.Id} para {destino.Id}:");
+
+            for (int i = 0; i < caminho.Count - 1; i++)
+            {
+                int peso = _matrizAdjacencia[caminho[i].Id, caminho[i + 1].Id];
+                resultado.Append($"{caminho[i].Id} ({peso}) ");
+            }
+
+            resultado.Append($"{caminho[caminho.Count - 1].Id}");
+            resultado.AppendLine($"\nDistância total: {distancias[destino.Id]}");
+
+            return resultado.ToString();
+        }
+
+        public string FloydWarshall()
+        {
+            int quantidadeVertices = NumeroVertices;
+            int[,] distancias = new int[quantidadeVertices, quantidadeVertices];
+
+            for (int i = 0; i < quantidadeVertices; i++)
+            {
+                for (int j = 0; j < quantidadeVertices; j++)
+                {
+                    if (i == j)
+                    {
+                        distancias[i, j] = 0;
+                    }
+                    else if (_matrizAdjacencia[i, j] != -1)
+                    {
+                        distancias[i, j] = _matrizAdjacencia[i, j];
+                    }
+                    else
+                    {
+                        distancias[i, j] = int.MaxValue;
+                    }
+                }
+            }
+
+            for (int k = 0; k < quantidadeVertices; k++)
+            {
+                for (int i = 0; i < quantidadeVertices; i++)
+                {
+                    for (int j = 0; j < quantidadeVertices; j++)
+                    {
+                        if (distancias[i, k] != int.MaxValue && distancias[k, j] != int.MaxValue)
+                        {
+                            int novaDistancia = distancias[i, k] + distancias[k, j];
+
+                            if (novaDistancia < distancias[i, j])
+                            {
+                                distancias[i, j] = novaDistancia;
+                            }
+                        }
+                    }
+                }
+            }
+
+            StringBuilder resultado = new StringBuilder();
+            resultado.AppendLine("Matriz de distâncias mínimas entre todos os pares de vértices:");
+
+            for (int i = 0; i < quantidadeVertices; i++)
+            {
+                for (int j = 0; j < quantidadeVertices; j++)
+                {
+                    if (distancias[i, j] == int.MaxValue)
+                    {
+                        resultado.Append("INF ");
+                    }
+                    else
+                    {
+                        resultado.Append(distancias[i, j]).Append(" ");
+                    }
+                }
+                resultado.AppendLine();
+            }
+
+            return resultado.ToString();
         }
     }
 }
