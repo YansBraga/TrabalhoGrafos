@@ -96,39 +96,115 @@ namespace TrabalhoGrafos
             return "Matriz de Adjacência";
         }
 
-        List<Aresta> IGrafo.ArestasAdjascentes(Vertice v1, Vertice v2)
+        List<Aresta> IGrafo.ArestasIncidentes(Vertice v)
         {
-            throw new NotImplementedException();
+            List<Aresta> arestas = new List<Aresta>();
+
+            if (v.Id < 0 || v.Id >= NumeroVertices)
+            {
+                throw new ArgumentOutOfRangeException("O índice do vértice está fora do intervalo.");
+            }
+
+            for (int i = 0; i < NumeroVertices; i++)
+            {
+                if (_matrizAdjacencia[i, v.Id] != -1) // Aresta incidindo em v
+                {
+                    arestas.Add(new Aresta(new Vertice(i), v, _matrizAdjacencia[i, v.Id]));
+                }
+            }
+
+            return arestas;
         }
 
-        List<Aresta> IGrafo.ArestasIncidentes(Vertice v)
+        List<Aresta> IGrafo.ArestasAdjascentes(Vertice v1, Vertice v2)
+        {
+            List<Aresta> arestas = new List<Aresta>();
+            List<Aresta> aux = new List<Aresta>();
+
+            arestas = ArestasIncidentes(v1);
+            aux = ArestasIncidentes(v2);
+
+            foreach (Aresta a in aux)
+            {
+                arestas.Add(a);
+            }
+
+            return arestas;
+        }
+
+        private List<Aresta> ArestasIncidentes(Vertice v1)
         {
             throw new NotImplementedException();
         }
 
         List<Vertice> IGrafo.VerticesIncidentes(Aresta aresta)
         {
-            throw new NotImplementedException();
-        }
+            List<Vertice> vertices = new List<Vertice>();
 
-        Vertice IGrafo.LocalizarVertice(string v)
-        {
-            throw new NotImplementedException();
-        }
+            if (aresta.Origem.Id < 0 || aresta.Origem.Id >= NumeroVertices ||
+                aresta.Destino.Id < 0 || aresta.Destino.Id >= NumeroVertices)
+            {
+                throw new ArgumentOutOfRangeException("Os índices dos vértices da aresta estão fora do intervalo.");
+            }
 
+            vertices.Add(aresta.Origem);
+            vertices.Add(aresta.Destino);
+
+            return vertices;
+        }
         Aresta IGrafo.LocalizarAresta(Vertice origem, Vertice destino)
         {
-            throw new NotImplementedException();
+            if (origem.Id < 0 || origem.Id >= NumeroVertices ||
+        destino.Id < 0 || destino.Id >= NumeroVertices)
+            {
+                throw new ArgumentOutOfRangeException("Um ou ambos os índices dos vértices estão fora do intervalo.");
+            }
+
+            if (_matrizAdjacencia[origem.Id, destino.Id] != -1)
+            {
+                return new Aresta(origem, destino, _matrizAdjacencia[origem.Id, destino.Id]);
+            }
+
+            throw new InvalidOperationException("A aresta não existe.");
         }
 
         int IGrafo.GrauVertice(Vertice v)
         {
-            throw new NotImplementedException();
-        }
+            if (v.Id < 0 || v.Id >= NumeroVertices)
+            {
+                throw new ArgumentOutOfRangeException("O índice do vértice está fora do intervalo.");
+            }
 
+            int grau = 0;
+
+            for (int j = 0; j < NumeroVertices; j++)
+            {
+                if (_matrizAdjacencia[v.Id, j] != -1)
+                {
+                    grau++;
+                }
+            }
+
+            // Grau de entrada
+            for (int i = 0; i < NumeroVertices; i++)
+            {
+                if (_matrizAdjacencia[i, v.Id] != -1)
+                {
+                    grau++;
+                }
+            }
+
+            return grau;
+        }
         bool IGrafo.IsAdjascente(Vertice v1, Vertice v2)
         {
-            throw new NotImplementedException();
+            if (v1.Id < 0 || v1.Id >= NumeroVertices ||
+                v2.Id < 0 || v2.Id >= NumeroVertices)
+            {
+                throw new ArgumentOutOfRangeException("Um ou ambos os índices dos vértices estão fora do intervalo.");
+            }
+
+            return _matrizAdjacencia[v1.Id, v2.Id] != -1; // Retorna true se são adjacentes
         }
     }
 }

@@ -16,7 +16,7 @@ namespace TrabalhoGrafos
         List<Aresta> ArestasAdjascentes(Vertice v1, Vertice v2);
         List<Aresta> ArestasIncidentes(Vertice v);
         List<Vertice> VerticesIncidentes(Aresta aresta);
-        Vertice LocalizarVertice(string v);
+        Vertice LocalizarVertice(int v);
         Aresta LocalizarAresta(Vertice origem, Vertice destino);        
 
         int GrauVertice(Vertice v);
