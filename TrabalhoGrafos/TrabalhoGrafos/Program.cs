@@ -64,11 +64,11 @@ namespace TrabalhoGrafos
                                     a.Add(new Aresta(new Vertice(origem), new Vertice(destino), peso));
                                 }
 
-                                vertices = a.Select(a => a.Origem).Distinct().ToList();
+                                //vertices = a.Select(a => a.Origem).Distinct().ToList();
 
                                 Representacao representacao = SelecionadorTipoGrafo.Choose(vertices, arestas);
 
-                                IGrafo grafo = representacao switch
+                                grafo = representacao switch
                                 {
                                     Representacao.ListaAdjacencia => new GrafoListaAdjacencia(v, a),
                                     //Representacao.MatrizAdjacencia => new GrafoMatrizAdjacencia(vertices, arestas),           
