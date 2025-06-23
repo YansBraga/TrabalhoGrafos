@@ -1,6 +1,9 @@
 ﻿using System;
-using System.IO;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace TrabalhoGrafos
 {
@@ -36,11 +39,38 @@ namespace TrabalhoGrafos
 
                                 break;
                             case 2:
-                                Console.WriteLine("Insira a quantidade de vértices e arestas respectivamente: ");
+                                Console.WriteLine("Insira a quantidade de vértices: ");
                                 vertices = int.Parse(Console.ReadLine());
+
+                                Console.WriteLine("Insira a quantidade de arestas: ");
                                 arestas = int.Parse(Console.ReadLine());
 
-                                //grafo = new Grafo(vertices, arestas);
+                                List<Aresta> a = new List<Aresta>();
+                                List<Vertice> v = new List<Vertice>();
+
+                                for (int i = 1; i < arestas; i++)
+                                {
+
+                                    Console.WriteLine("Digite a origem da aresta: ");
+                                    int origem = int.Parse(Console.ReadLine());
+                                    Console.WriteLine("Digite o destino da aresta: ");
+                                    int destino = int.Parse(Console.ReadLine());
+                                    Console.WriteLine("Digite o peso da aresta: ");
+                                    int peso = int.Parse(Console.ReadLine());
+
+                                    a.Add(new Aresta(new Vertice(origem), new Vertice(destino), peso));
+                                }
+
+                                vertices = a.Select(a => a.Origem).Distinct().ToList();
+
+                                Representacao representacao = SelecionadorTipoGrafo.Choose(vertices, arestas);
+
+                                IGrafo grafo = representacao switch
+                                {
+                                    Representacao.ListaAdjacencia => new GrafoListaAdjacencia(v, a),
+                                    //Representacao.MatrizAdjacencia => new GrafoMatrizAdjacencia(vertices, arestas),           
+                                    _ => throw new NotSupportedException("Representação de grafo não suportada.")
+                                };
 
                                 if (grafo != null)
                                     Console.WriteLine($"Grafo criado com sucesso! \nRepresentação: {grafo.ToString()}");
@@ -104,10 +134,10 @@ namespace TrabalhoGrafos
                                 break;
 
                             case 7: //  Determinar se dois vértices são adjacentes
-                                if(grafo.IsAdjascente(LerVertice(), LerVertice()))                                
-                                    Console.WriteLine("Os vértices são adjacentes.");                                
-                                else                                
-                                    Console.WriteLine("Os vértices não são adjacentes.");                                                                
+                                if (grafo.IsAdjascente(LerVertice(), LerVertice()))
+                                    Console.WriteLine("Os vértices são adjacentes.");
+                                else
+                                    Console.WriteLine("Os vértices não são adjacentes.");
                                 break;
 
                             case 8: //  Substituir o peso de uma aresta a, informada pelo usuário
@@ -120,7 +150,7 @@ namespace TrabalhoGrafos
                                 else
                                 {
                                     Console.WriteLine("Entrada inválida. Por favor, insira um número.");
-                                }                                
+                                }
                                 break;
                             case 9: //  Trocar dois vértices
                                 Vertice v1 = LerVertice();
@@ -132,8 +162,9 @@ namespace TrabalhoGrafos
                                     Console.WriteLine("Falha ao trocar os vértices. Verifique se ambos existem no grafo.");
                                 break;
 
-                            case 10: //  Busca em grafos (Busca em Largura)
-                                LerAresta();
+                            case 10: // Busca em grafos (Busca em Largura)
+                                Vertice verticeInicial = LerVertice();
+                                BuscaLargura(verticeInicial);
                                 break;
 
                             case 11: //  Busca em grafos (Busca em Profundidade)
@@ -264,12 +295,99 @@ namespace TrabalhoGrafos
 
         public static void BuscaLargura(Vertice v)
         {
-            throw new NotImplementedException();
+            int t = 0;
+            Queue<Vertice> fila = new Queue<Vertice>();
+            List<int> L = new List<int>(new int[grafo.NumeroVertices]);
+            List<int> nivel = new List<int>(new int[grafo.NumeroVertices]);
+            List<Vertice> pai = new List<Vertice>(new Vertice[grafo.NumeroVertices]);
+
+            for (int i = 0; i < grafo.NumeroVertices; i++)
+            {
+                L[i] = 0;
+                nivel[i] = 0;
+                pai[i] = null;
+            }
+
+            fila.Enqueue(v);
+            t++;
+            L[v.Id] = t;
+            nivel[v.Id] = 0;
+
+            while (fila.Count > 0)
+            {
+                Vertice atual = fila.Dequeue();
+
+                foreach (Vertice vert in grafo.VerticesAdjascentes(atual).OrderBy(adj => adj.Id))
+                {
+                    if (L[vert.Id] == 0)
+                    {
+                        t++;
+                        L[vert.Id] = t;
+                        nivel[vert.Id] = nivel[atual.Id] + 1;
+                        pai[vert.Id] = atual;
+                        fila.Enqueue(vert);
+                    }
+                }
+            }
+
+            Console.WriteLine("Resultado da Busca em Largura:");
+            for (int i = 0; i < grafo.NumeroVertices; i++)
+            {
+                if (L[i] != 0)
+                {
+                    Console.WriteLine($"Vértice: {i}, Nível: {nivel[i]}, Pai: {(pai[i] != null ? pai[i].Id.ToString() : "null")}");
+                }
+            }
         }
 
+
+        static int t = 0;
         public static void BuscaProfundidade(Vertice v)
         {
-            throw new NotImplementedException();
+            t = 0;
+            List<int> td = new List<int>(new int[grafo.NumeroVertices]);
+            List<int> tt = new List<int>(new int[grafo.NumeroVertices]);  
+            List<Vertice> pai = new List<Vertice>(new Vertice[grafo.NumeroVertices]);  
+
+            for (int i = 0; i < grafo.NumeroVertices; i++)
+            {
+                td[i] = 0;  
+                tt[i] = 0;  
+                pai[i] = null;  
+            }
+
+            BuscandoProfundidade(v, td, tt, pai);
+
+            for (int i = 0; i < grafo.NumeroVertices; i++)
+            {
+                 if (td[i] == 0)
+                 {
+                     BuscandoProfundidade(v, td, tt, pai);
+                 }
+             }
+        }
+
+        private static void BuscandoProfundidade(Vertice v, List<int> td, List<int> tt, List<Vertice> pai)
+        {
+            t++;
+            td[v.Id] = t; 
+
+            foreach (Vertice w in grafo.VerticesAdjascentes(v).OrderBy(adj => adj.Id))
+            {
+                if (td[w.Id] == 0)  
+                {
+                    pai[w.Id] = v; 
+                    BuscandoProfundidade(w, td, tt, pai);
+                }
+            }
+
+            t++;
+            tt[v.Id] = t; 
+        }
+
+        public static bool verticeNaoDescoberto(List<int> td)
+        {
+            return td.Any(aux => aux == 0); 
         }
     }
 }

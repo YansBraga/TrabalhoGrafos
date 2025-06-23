@@ -35,8 +35,8 @@ namespace TrabalhoGrafos
                 {
                     
                     string[] dadosAresta = linhas[i].Split(' ');
-                    string origem = dadosAresta[0];
-                    string destino = dadosAresta[1];
+                    int origem = int.Parse(dadosAresta[0]);
+                    int destino = int.Parse(dadosAresta[1]);
                     int peso = int.Parse(dadosAresta[2]);                    
 
                     arestas.Add(new Aresta(new Vertice(origem), new Vertice(destino), peso));

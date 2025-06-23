@@ -165,8 +165,8 @@ namespace TrabalhoGrafos
         public bool TrocarVertices(Vertice v1, Vertice v2)
         {
             
-            var vert1 = LocalizarVertice(v1.Nome);
-            var vert2 = LocalizarVertice(v2.Nome);
+            var vert1 = LocalizarVertice(v1.Id);
+            var vert2 = LocalizarVertice(v2.Id);
             if (vert1 == null || vert2 == null) return false;
 
             
