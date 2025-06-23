@@ -42,14 +42,15 @@ namespace TrabalhoGrafos
 
                                 break;
                             case 2:
+                                StringBuilder sb = new StringBuilder();
+
                                 Console.WriteLine("Insira a quantidade de vértices: ");
                                 vertices = int.Parse(Console.ReadLine());
 
                                 Console.WriteLine("Insira a quantidade de arestas: ");
                                 arestas = int.Parse(Console.ReadLine());
 
-                                List<Aresta> a = new List<Aresta>();
-                                List<Vertice> v = new List<Vertice>();
+                                sb.AppendLine($"{vertices} {arestas}");
 
                                 for (int i = 1; i < arestas; i++)
                                 {
@@ -61,24 +62,26 @@ namespace TrabalhoGrafos
                                     Console.WriteLine("Digite o peso da aresta: ");
                                     int peso = int.Parse(Console.ReadLine());
 
-                                    a.Add(new Aresta(new Vertice(origem), new Vertice(destino), peso));
+                                    sb.AppendLine($"{origem} {destino} {peso}");
                                 }
+                                // Obtém o diretório do projeto, assumindo que o arquivo está na raiz do projeto
+                                var projetoDir = Directory.GetParent(AppContext.BaseDirectory) // ...\bin\Debug\net8.0
+                                                        .Parent // ...\bin\Debug
+                                                        .Parent // ...\bin
+                                                        .Parent // ...\<pasta do projeto>
+                                                        .FullName;
+                                string path = Path.Combine(projetoDir, "grafo.dimacs");
 
-                                 v = a.Select(w => w.Origem).Distinct().ToList();
+                                // Salva o conteúdo do StringBuilder no arquivo
+                                File.WriteAllText(path, sb.ToString());
 
-                                Representacao representacao = SelecionadorTipoGrafo.Choose(vertices, arestas);
-
-                                grafo = representacao switch
-                                {
-                                    Representacao.ListaAdjacencia => new GrafoListaAdjacencia(v, a),
-                                    //Representacao.MatrizAdjacencia => new GrafoMatrizAdjacencia(vertices, arestas),           
-                                    _ => throw new NotSupportedException("Representação de grafo não suportada.")
-                                };
+                                grafo = Arquivo.ImportarArquivo();
 
                                 if (grafo != null)
-                                    Console.WriteLine($"Grafo criado com sucesso! \nRepresentação: {grafo.ToString()}");
+                                    Console.WriteLine($"Grafo salvo com sucesso! \nRepresentação: {grafo.ToString()}");
                                 else
-                                    Console.WriteLine("Falha ao importar o grafo. Tente novamente.");
+                                    Console.WriteLine("Falha ao salvar o grafo. Tente novamente.");
+
                                 break;
                             case 3:
 
@@ -129,7 +132,7 @@ namespace TrabalhoGrafos
                                     vertices_.ForEach(v => Console.WriteLine(v));
                                 else
                                     Console.WriteLine("Não existem vértices adjascentes para este vértice");
-                                    break;
+                                break;
 
                             case 4: //  Imprimir todas as arestas incidentes a um vértice v, informado pelo usuário.
                                 Console.WriteLine($"Arestas incidentes:");
@@ -391,48 +394,48 @@ namespace TrabalhoGrafos
         {
             t = 0;
             List<int> td = new List<int>(new int[grafo.NumeroVertices]);
-            List<int> tt = new List<int>(new int[grafo.NumeroVertices]);  
-            List<Vertice> pai = new List<Vertice>(new Vertice[grafo.NumeroVertices]);  
+            List<int> tt = new List<int>(new int[grafo.NumeroVertices]);
+            List<Vertice> pai = new List<Vertice>(new Vertice[grafo.NumeroVertices]);
 
             for (int i = 0; i < grafo.NumeroVertices; i++)
             {
-                td[i] = 0;  
-                tt[i] = 0;  
-                pai[i] = null;  
+                td[i] = 0;
+                tt[i] = 0;
+                pai[i] = null;
             }
 
             BuscandoProfundidade(v, td, tt, pai);
 
             for (int i = 0; i < grafo.NumeroVertices; i++)
             {
-                 if (td[i] == 0)
-                 {
-                     BuscandoProfundidade(v, td, tt, pai);
-                 }
-             }
+                if (td[i] == 0)
+                {
+                    BuscandoProfundidade(v, td, tt, pai);
+                }
+            }
         }
 
         private static void BuscandoProfundidade(Vertice v, List<int> td, List<int> tt, List<Vertice> pai)
         {
             t++;
-            td[v.Id] = t; 
+            td[v.Id] = t;
 
             foreach (Vertice w in grafo.VerticesAdjascentes(v).OrderBy(adj => adj.Id))
             {
-                if (td[w.Id] == 0)  
+                if (td[w.Id] == 0)
                 {
-                    pai[w.Id] = v; 
+                    pai[w.Id] = v;
                     BuscandoProfundidade(w, td, tt, pai);
                 }
             }
 
             t++;
-            tt[v.Id] = t; 
+            tt[v.Id] = t;
         }
 
         public static bool verticeNaoDescoberto(List<int> td)
         {
-            return td.Any(aux => aux == 0); 
+            return td.Any(aux => aux == 0);
         }
     }
 }
