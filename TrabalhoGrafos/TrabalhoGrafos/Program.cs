@@ -178,12 +178,11 @@ namespace TrabalhoGrafos
                                 break;
 
                             case 10: // Busca em grafos (Busca em Largura)
-                                Vertice verticeInicial = LerVertice();
-                                BuscaLargura(verticeInicial);
+                                BuscaLargura(LerVertice());
                                 break;
 
                             case 11: //  Busca em grafos (Busca em Profundidade)
-                                LerAresta();
+                                BuscaProfundidade(LerVertice());
                                 break;
 
                             case 12:
@@ -256,36 +255,11 @@ namespace TrabalhoGrafos
             Console.WriteLine("6. Imprimir o grau de um vértice");
             Console.WriteLine("7. Determinar se dois vértices são adjacentes");
             Console.WriteLine("8. Substituir o peso de uma aresta");
-            Console.WriteLine("9. Trocar dois vértices"); /* Como exemplo, considere um vértice v1 que se conecta aos
-                                                            vértices v3, v5 e v7, ao passo que o vértice v2 se conecta aos vértices v4 e v6. 
-                                                            A troca dos vértices v1 e v2 implicaria que o vértice v1 estaria conectado aos
-                                                            vértices v4 e v6. Por sua vez, o vértice v2 estaria conectado aos vértices v3, v5
-                                                            e v7. O usuário deverá informar qual são os dois vértices a serem trocados.
-                                                          */
-            Console.WriteLine("1 - Imprimir representação do grafo");
-            Console.WriteLine("1 - Imprimir representação do grafo");
-            Console.WriteLine("1 - Imprimir representação do grafo");
-            Console.WriteLine("1 - Imprimir representação do grafo");
-            // Adicione as outras 14 opções do trabalho aqui
-            /*
-        10. Busca em grafos (Busca em Largura): O vértice inicial será dado pelo usuário e
-        a respectiva árvore de busca deve ser gerada assim como o nível de cada vértice
-        na árvore (nível da raiz é zero), além de apresentar os predecessores. Use a
-        ordem numérica crescente para escolher entre os vértices adjacentes.
-        11. Busca em grafos (Busca em Profundidade): O vértice inicial será dado pelo
-        usuário e a respectiva árvore de busca deve ser gerada assim como a distância
-        de descoberta e de finalização de cada vértice na árvore (nível da raiz é zero).
-        Use a ordem numérica crescente para escolher entre os vértices adjacentes.
-        12. Implementar o Algoritmo de Dijkstra. Este algoritmo, a partir de um vértice origem
-        o e um vértice destino d, encontra o caminho mínimo entre eles. Deverá ser
-        impresso a rota utilizada, ou seja, os vértices utilizados no caminho mínimo entre
-        o e d, com os respectivos pesos de cada aresta do caminho.
-        13. Implementar o Algoritmo de Floyd Warshall. Este algoritmo, a partir de um
-        vértice origem o, encontra o caminho mínimo entre o vértice o e todos os demais
-        vértices do grafo.
-        14. Criação de um menu onde o usuário poderá interagir com a aplicação
-            */
-            // ...
+            Console.WriteLine("9. Trocar dois vértices");
+            Console.WriteLine("10. Busca em Largura");
+            Console.WriteLine("11. Busca em Profundidade");
+            Console.WriteLine("12. Dijkstra");
+            Console.WriteLine("13. Floyd Warshall");
             Console.WriteLine("16 - Descartar grafo e voltar");
             Console.WriteLine("0 - Sair do Programa");
             Console.Write("\nEscolha uma opção: ");
