@@ -406,10 +406,5 @@ namespace TrabalhoGrafos
             t++;
             tt[v.Id] = t;
         }
-
-        public static bool verticeNaoDescoberto(List<int> td)
-        {
-            return td.Any(aux => aux == 0);
-        }
     }
 }
