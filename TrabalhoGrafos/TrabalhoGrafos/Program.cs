@@ -64,7 +64,7 @@ namespace TrabalhoGrafos
                                     a.Add(new Aresta(new Vertice(origem), new Vertice(destino), peso));
                                 }
 
-                                //vertices = a.Select(a => a.Origem).Distinct().ToList();
+                                 v = a.Select(w => w.Origem).Distinct().ToList();
 
                                 Representacao representacao = SelecionadorTipoGrafo.Choose(vertices, arestas);
 
