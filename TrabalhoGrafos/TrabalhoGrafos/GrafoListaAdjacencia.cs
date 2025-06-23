@@ -54,13 +54,15 @@ namespace TrabalhoGrafos
         /// </summary>
         public string Imprimir()
         {
-            StringBuilder sb = new StringBuilder();
-            foreach (Vertice v in _vertices.Values)
+            var sb = new StringBuilder();
+            foreach (var v in _vertices.Values)
             {
                 sb.Append(v.Id).Append(": ");
-                sb.AppendLine(string.Join(", ", v.ArestasSaindo.Select(a => a.ToString())));
+                var listaArestas = v.ArestasSaindo.Select(a => $"{v.Id} -> {a.Destino.Id} (Peso: {a.Peso})");
+                sb.AppendLine(string.Join(", ", listaArestas));
             }
             return sb.ToString();
+
         }
 
         public List<Vertice> VerticesAdjascentes(Vertice v)
