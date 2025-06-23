@@ -207,15 +207,14 @@ namespace TrabalhoGrafos
 
         public string Dijkstra(Vertice origem, Vertice destino)
         {
-            int[] distancias = new int[NumeroVertices];
-            Vertice[] predecessores = new Vertice[NumeroVertices];
-            bool[] visitados = new bool[NumeroVertices];
+            Dictionary<int, int> distancias = new Dictionary<int, int>();
+            Dictionary<int, Vertice> predecessores = new Dictionary<int, Vertice>();
+            HashSet<int> visitados = new HashSet<int>();
 
-            for (int i = 0; i < NumeroVertices; i++)
+            foreach (Vertice vertice in _vertices.Values)
             {
-                distancias[i] = int.MaxValue;
-                predecessores[i] = null;
-                visitados[i] = false;
+                distancias[vertice.Id] = int.MaxValue;
+                predecessores[vertice.Id] = null;
             }
 
             distancias[origem.Id] = 0;
@@ -227,29 +226,29 @@ namespace TrabalhoGrafos
             {
                 int u = fila.Dequeue();
 
-                if (visitados[u] == false)
+                if (!visitados.Contains(u))
                 {
-                    visitados[u] = true;
+                    visitados.Add(u);
 
                     Vertice verticeAtual = LocalizarVertice(u);
 
                     if (verticeAtual != null)
                     {
-                        List<Aresta> arestas = verticeAtual.ArestasSaindo;
-
-                        for (int i = 0; i < arestas.Count; i++)
+                        foreach (Aresta aresta in verticeAtual.ArestasSaindo)
                         {
-                            Aresta aresta = arestas[i];
-                            int v =aresta.Destino.Id;
+                            int v = aresta.Destino.Id;
                             int peso = aresta.Peso;
 
-                            int novaDistancia = distancias[u-1] + peso;
-
-                            if (novaDistancia < distancias[v-1])
+                            if (distancias[u] != int.MaxValue)
                             {
-                                distancias[v] = novaDistancia;
-                                predecessores[v] = new Vertice(u);
-                                fila.Enqueue(v, novaDistancia);
+                                int novaDistancia = distancias[u] + peso;
+
+                                if (novaDistancia < distancias[v])
+                                {
+                                    distancias[v] = novaDistancia;
+                                    predecessores[v] = verticeAtual;
+                                    fila.Enqueue(v, novaDistancia);
+                                }
                             }
                         }
                     }
@@ -293,6 +292,18 @@ namespace TrabalhoGrafos
         public string FloydWarshall()
         {
             int quantidadeVertices = NumeroVertices;
+
+            Dictionary<int, int> mapaIdParaIndice = new Dictionary<int, int>();
+            Dictionary<int, int> mapaIndiceParaId = new Dictionary<int, int>();
+
+            int indice = 0;
+            foreach (Vertice vertice in _vertices.Values)
+            {
+                mapaIdParaIndice[vertice.Id] = indice;
+                mapaIndiceParaId[indice] = vertice.Id;
+                indice++;
+            }
+
             int[,] distancias = new int[quantidadeVertices, quantidadeVertices];
 
             for (int i = 0; i < quantidadeVertices; i++)
@@ -310,19 +321,14 @@ namespace TrabalhoGrafos
                 }
             }
 
-            for (int i = 0; i < _vertices.Count; i++)
+            foreach (Vertice vertice in _vertices.Values)
             {
-                Vertice verticeOrigem = _vertices[i];
+                int origemIndice = mapaIdParaIndice[vertice.Id];
 
-                List<Aresta> arestasSaindo = verticeOrigem.ArestasSaindo;
-
-                for (int j = 0; j < arestasSaindo.Count; j++)
+                foreach (Aresta aresta in vertice.ArestasSaindo)
                 {
-                    Aresta aresta = arestasSaindo[j];
-                    int origemId = verticeOrigem.Id;
-                    int destinoId = aresta.Destino.Id;
-
-                    distancias[origemId, destinoId] = aresta.Peso;
+                    int destinoIndice = mapaIdParaIndice[aresta.Destino.Id];
+                    distancias[origemIndice, destinoIndice] = aresta.Peso;
                 }
             }
 
@@ -352,13 +358,16 @@ namespace TrabalhoGrafos
             {
                 for (int j = 0; j < quantidadeVertices; j++)
                 {
+                    int origemId = mapaIndiceParaId[i];
+                    int destinoId = mapaIndiceParaId[j];
+
                     if (distancias[i, j] == int.MaxValue)
                     {
-                        resultado.Append("INF ");
+                        resultado.Append($"({origemId}->{destinoId}) INF\t");
                     }
                     else
                     {
-                        resultado.Append(distancias[i, j]).Append(" ");
+                        resultado.Append($"({origemId}->{destinoId}) {distancias[i, j]}\t");
                     }
                 }
                 resultado.AppendLine();

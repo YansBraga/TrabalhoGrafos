@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,7 +12,7 @@ namespace TrabalhoGrafos
     {
         public static IGrafo grafo = null;
 
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             bool sair = false;
             int arestas = 0;
@@ -64,11 +65,11 @@ namespace TrabalhoGrafos
                                     a.Add(new Aresta(new Vertice(origem), new Vertice(destino), peso));
                                 }
 
-                                vertices = a.Select(a => a.Origem).Distinct().ToList();
+                                vertices = a.Select(a => a.Origem).Distinct().ToList().Count;
 
                                 Representacao representacao = SelecionadorTipoGrafo.Choose(vertices, arestas);
 
-                                IGrafo grafo = representacao switch
+                                grafo = representacao switch
                                 {
                                     Representacao.ListaAdjacencia => new GrafoListaAdjacencia(v, a),
                                     //Representacao.MatrizAdjacencia => new GrafoMatrizAdjacencia(vertices, arestas),           

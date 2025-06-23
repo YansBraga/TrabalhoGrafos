@@ -14,11 +14,11 @@ namespace TrabalhoGrafos
         public GrafoMatrizAdjacencia(int numVertices)
         {
             NumeroVertices = numVertices;
-            _matrizAdjacencia = new int[numVertices, numVertices];
+            _matrizAdjacencia = new int[numVertices + 1, numVertices + 1];
 
-            for (int i = 0; i < numVertices; i++)
+            for (int i = 0; i <= numVertices; i++)
             {
-                for (int j = 0; j < numVertices; j++)
+                for (int j = 0; j <= numVertices; j++)
                 {
                     _matrizAdjacencia[i, j] = -1; // Usando -1 para indicar que não há aresta
                 }
@@ -38,28 +38,26 @@ namespace TrabalhoGrafos
             }
         }
 
-        string IGrafo.Imprimir()
+        public string Imprimir()
         {
             StringBuilder sb = new StringBuilder();
 
             sb.AppendLine($"Número de Vértices: {NumeroVertices}, Número de Arestas: {NumeroArestas}");
-            for (int i = 0; i < NumeroVertices; i++)
+            for (int i = 1; i <= NumeroVertices; i++)
             {
-                for (int j = 0; j < NumeroVertices; j++)
-                {
-                    sb.Append(_matrizAdjacencia[i, j] + " ");
-                }
+                for (int j = 1; j <= NumeroVertices; j++)
+                    sb.Append(_matrizAdjacencia[i, j]).Append(' ');
                 sb.AppendLine();
             }
 
             return sb.ToString();
         }
 
-        List<Vertice> IGrafo.VerticesAdjascentes(Vertice v)
+        public List<Vertice> VerticesAdjascentes(Vertice v)
         {
             List<Vertice> verticesAdjacentes = new List<Vertice>();
 
-            for (int j = 0; j < NumeroVertices; j++) // Em um grafo direcionado, arestas entrantes e saintes sao vertices adjascentes
+            for (int j = 1; j <= NumeroVertices; j++) // Em um grafo direcionado, arestas entrantes e saintes sao vertices adjascentes
             {
                 if (_matrizAdjacencia[v.Id, j] != -1 || _matrizAdjacencia[j, v.Id] != -1)
                 {
@@ -82,9 +80,9 @@ namespace TrabalhoGrafos
             return verticesAdjacentes;
         }
 
-        Vertice IGrafo.LocalizarVertice(int v)
+        public Vertice LocalizarVertice(int v)
         {
-            if (v < 0 || v >= NumeroVertices)
+            if (v < 1 || v > NumeroVertices)
             {
                 throw new ArgumentOutOfRangeException("O índice do vértice está fora do intervalo.");
             }
@@ -98,13 +96,13 @@ namespace TrabalhoGrafos
 
         public List<Aresta> ArestasIncidentes(Vertice v)
         {
-            if (v.Id < 0 || v.Id >= NumeroVertices)
+            if (v.Id < 1 || v.Id > NumeroVertices)
                 throw new ArgumentOutOfRangeException("O índice do vértice está fora do intervalo.");
 
             var arestas = new List<Aresta>();
 
             // 1) Entrantes: coluna fixa = v.Id
-            for (int i = 0; i < NumeroVertices; i++)
+            for (int i = 1; i <= NumeroVertices; i++)
             {
                 int peso = _matrizAdjacencia[i, v.Id];
                 if (peso != -1)
@@ -112,7 +110,7 @@ namespace TrabalhoGrafos
             }
 
             // 2) Saídas: linha fixa = v.Id
-            for (int j = 0; j < NumeroVertices; j++)
+            for (int j = 1; j <= NumeroVertices; j++)
             {
                 int peso = _matrizAdjacencia[v.Id, j];
                 if (peso != -1)
@@ -122,28 +120,22 @@ namespace TrabalhoGrafos
             return arestas;
         }
 
-        List<Aresta> IGrafo.ArestasAdjascentes(Vertice v1, Vertice v2)
+        public List<Aresta> ArestasAdjascentes(Vertice v1, Vertice v2)
         {
-            List<Aresta> arestas = new List<Aresta>();
-            List<Aresta> aux = new List<Aresta>();
-
-            arestas = ArestasIncidentes(v1);
-            aux = ArestasIncidentes(v2);
-
-            foreach (Aresta a in aux)
-            {
-                arestas.Add(a);
-            }
-
-            return arestas;
+            var lista = new List<Aresta>();
+            if (_matrizAdjacencia[v1.Id, v2.Id] != -1)
+                lista.Add(new Aresta(v1, v2, _matrizAdjacencia[v1.Id, v2.Id]));
+            if (_matrizAdjacencia[v2.Id, v1.Id] != -1)
+                lista.Add(new Aresta(v2, v1, _matrizAdjacencia[v2.Id, v1.Id]));
+            return lista;
         }
 
-        List<Vertice> IGrafo.VerticesIncidentes(Aresta aresta)
+        public List<Vertice> VerticesIncidentes(Aresta aresta)
         {
             List<Vertice> vertices = new List<Vertice>();
 
-            if (aresta.Origem.Id < 0 || aresta.Origem.Id >= NumeroVertices ||
-                aresta.Destino.Id < 0 || aresta.Destino.Id >= NumeroVertices)
+            if (aresta.Origem.Id < 1 || aresta.Origem.Id > NumeroVertices ||
+                aresta.Destino.Id < 1 || aresta.Destino.Id > NumeroVertices)
             {
                 throw new ArgumentOutOfRangeException("Os índices dos vértices da aresta estão fora do intervalo.");
             }
@@ -153,9 +145,9 @@ namespace TrabalhoGrafos
 
             return vertices;
         }
-        Aresta IGrafo.LocalizarAresta(Vertice origem, Vertice destino)
+        public Aresta LocalizarAresta(Vertice origem, Vertice destino)
         {
-            if (origem.Id < 0 || origem.Id >= NumeroVertices || destino.Id < 0 || destino.Id >= NumeroVertices)
+            if (origem.Id < 1 || origem.Id > NumeroVertices || destino.Id < 1 || destino.Id > NumeroVertices)
             {
                 throw new ArgumentOutOfRangeException("Um ou ambos os índices dos vértices estão fora do intervalo.");
             }
@@ -168,16 +160,16 @@ namespace TrabalhoGrafos
             throw new InvalidOperationException("A aresta não existe.");
         }
 
-        int IGrafo.GrauVertice(Vertice v)
+        public int GrauVertice(Vertice v)
         {
-            if (v.Id < 0 || v.Id >= NumeroVertices)
+            if (v.Id < 1 || v.Id > NumeroVertices)
             {
                 throw new ArgumentOutOfRangeException("O índice do vértice está fora do intervalo.");
             }
 
             int grau = 0;
 
-            for (int j = 0; j < NumeroVertices; j++)
+            for (int j = 1; j <= NumeroVertices; j++)
             {
                 if (_matrizAdjacencia[v.Id, j] != -1)
                 {
@@ -186,7 +178,7 @@ namespace TrabalhoGrafos
             }
 
             // Grau de entrada
-            for (int i = 0; i < NumeroVertices; i++)
+            for (int i = 1; i <= NumeroVertices; i++)
             {
                 if (_matrizAdjacencia[i, v.Id] != -1)
                 {
@@ -196,10 +188,10 @@ namespace TrabalhoGrafos
 
             return grau;
         }
-        bool IGrafo.IsAdjascente(Vertice v1, Vertice v2)
+        public bool IsAdjascente(Vertice v1, Vertice v2)
         {
-            if (v1.Id < 0 || v1.Id >= NumeroVertices ||
-                v2.Id < 0 || v2.Id >= NumeroVertices)
+            if (v1.Id < 1 || v1.Id > NumeroVertices ||
+                v2.Id < 1 || v2.Id > NumeroVertices)
             {
                 throw new ArgumentOutOfRangeException("Um ou ambos os índices dos vértices estão fora do intervalo.");
             }
@@ -209,43 +201,50 @@ namespace TrabalhoGrafos
 
         public void SubstituirPeso(Aresta aresta, int peso)
         {
+            if (aresta.Origem.Id < 1 || aresta.Origem.Id > NumeroVertices ||
+            aresta.Destino.Id < 1 || aresta.Destino.Id > NumeroVertices)
+            throw new ArgumentOutOfRangeException("Não foi possível adicionar pois excede o tamanho da matriz");
+
             _matrizAdjacencia[aresta.Origem.Id, aresta.Destino.Id] = peso;
         }
 
         public bool TrocarVertices(Vertice v1, Vertice v2)
-        {            
-            if (v1.Id < 0 || v1.Id >= NumeroVertices ||
-                v2.Id < 0 || v2.Id >= NumeroVertices)
+        {
+            if (v1.Id < 1 || v1.Id > NumeroVertices ||
+                v2.Id < 1 || v2.Id > NumeroVertices)
                 throw new ArgumentOutOfRangeException("Um ou ambos os índices dos vértices estão fora do intervalo.");
 
             int i = v1.Id;
             int j = v2.Id;
-            
-            for (int col = 0; col < NumeroVertices; col++)
+
+            for (int col = 1; col <= NumeroVertices; col++)
             {
                 int tmp = _matrizAdjacencia[i, col];
                 _matrizAdjacencia[i, col] = _matrizAdjacencia[j, col];
                 _matrizAdjacencia[j, col] = tmp;
             }
 
-            for (int row = 0; row < NumeroVertices; row++)
+            for (int row = 1; row <= NumeroVertices; row++)
             {
                 int tmp = _matrizAdjacencia[row, i];
                 _matrizAdjacencia[row, i] = _matrizAdjacencia[row, j];
                 _matrizAdjacencia[row, j] = tmp;
             }
-            
+
             return true;
         }
+
 
         //-----------------------------------Algoritmos-----------------------------------//
         public string Dijkstra(Vertice origem, Vertice destino)
         {
-            int[] distancias = new int[NumeroVertices];
-            Vertice[] predecessores = new Vertice[NumeroVertices];
-            bool[] visitados = new bool[NumeroVertices];
 
-            for (int i = 0; i < NumeroVertices; i++)
+            int[] distancias = new int[NumeroVertices + 1];
+            Vertice[] predecessores = new Vertice[NumeroVertices + 1];
+            bool[] visitados = new bool[NumeroVertices + 1];
+
+
+            for (int i = 1; i <= NumeroVertices; i++)
             {
                 distancias[i] = int.MaxValue;
                 predecessores[i] = null;
@@ -254,128 +253,106 @@ namespace TrabalhoGrafos
 
             distancias[origem.Id] = 0;
 
-            PriorityQueue<int, int> fila = new PriorityQueue<int, int>();
+
+            var fila = new PriorityQueue<int, int>();
             fila.Enqueue(origem.Id, 0);
 
             while (fila.Count > 0)
             {
                 int u = fila.Dequeue();
-
-                if (visitados[u] == false)
+                if (!visitados[u])
                 {
                     visitados[u] = true;
-
-                    for (int v = 0; v < NumeroVertices; v++)
+                    
+                    for (int v = 1; v <= NumeroVertices; v++)
                     {
                         int peso = _matrizAdjacencia[u, v];
-
                         if (peso != -1)
                         {
-                            int novaDistancia = distancias[u] + peso;
-
-                            if (novaDistancia < distancias[v])
+                            int novaDist = distancias[u] + peso;
+                            if (novaDist < distancias[v])
                             {
-                                distancias[v] = novaDistancia;
+                                distancias[v] = novaDist;
                                 predecessores[v] = new Vertice(u);
-                                fila.Enqueue(v, novaDistancia);
+                                fila.Enqueue(v, novaDist);
                             }
                         }
                     }
                 }
             }
-
-            List<Vertice> caminho = new List<Vertice>();
-            Vertice atual = destino;
-
-            while (atual != null)
-            {
+            
+            var caminho = new List<Vertice>();
+            for (Vertice atual = destino; atual != null; atual = predecessores[atual.Id])
                 caminho.Insert(0, atual);
-                atual = predecessores[atual.Id];
-            }
 
             if (distancias[destino.Id] == int.MaxValue)
-            {
                 return $"Não existe caminho entre {origem.Id} e {destino.Id}.";
-            }
 
-            StringBuilder resultado = new StringBuilder();
-            resultado.AppendLine($"Caminho mínimo de {origem.Id} para {destino.Id}:");
-
+            // 6) Monta a string de saída
+            var sb = new StringBuilder();
+            sb.AppendLine($"Caminho mínimo de {origem.Id} para {destino.Id}:");
             for (int i = 0; i < caminho.Count - 1; i++)
             {
-                int peso = _matrizAdjacencia[caminho[i].Id, caminho[i + 1].Id];
-                resultado.Append($"{caminho[i].Id} ({peso}) ");
+                int id1 = caminho[i].Id, id2 = caminho[i + 1].Id;
+                int peso = _matrizAdjacencia[id1, id2];
+                sb.Append($"{id1} ({peso}) ");
             }
+            sb.AppendLine($"{caminho[^1].Id}")
+              .AppendLine($"Distância total: {distancias[destino.Id]}");
 
-            resultado.Append($"{caminho[caminho.Count - 1].Id}");
-            resultado.AppendLine($"\nDistância total: {distancias[destino.Id]}");
-
-            return resultado.ToString();
+            return sb.ToString();
         }
+
 
         public string FloydWarshall()
         {
-            int quantidadeVertices = NumeroVertices;
-            int[,] distancias = new int[quantidadeVertices, quantidadeVertices];
+            int n = NumeroVertices;
+            int[,] dist = new int[n + 1, n + 1];
 
-            for (int i = 0; i < quantidadeVertices; i++)
+            for (int i = 1; i <= n; i++)
             {
-                for (int j = 0; j < quantidadeVertices; j++)
+                for (int j = 1; j <= n; j++)
                 {
                     if (i == j)
-                    {
-                        distancias[i, j] = 0;
-                    }
+                        dist[i, j] = 0;
                     else if (_matrizAdjacencia[i, j] != -1)
-                    {
-                        distancias[i, j] = _matrizAdjacencia[i, j];
-                    }
+                        dist[i, j] = _matrizAdjacencia[i, j];
                     else
+                        dist[i, j] = int.MaxValue;
+                }
+            }
+
+            for (int k = 1; k <= n; k++)
+            {
+                for (int i = 1; i <= n; i++)
+                {
+                    if (dist[i, k] == int.MaxValue) continue;
+                    for (int j = 1; j <= n; j++)
                     {
-                        distancias[i, j] = int.MaxValue;
+                        if (dist[k, j] == int.MaxValue) continue;
+                        int viaK = dist[i, k] + dist[k, j];
+                        if (viaK < dist[i, j])
+                            dist[i, j] = viaK;
                     }
                 }
             }
 
-            for (int k = 0; k < quantidadeVertices; k++)
+            var sb = new StringBuilder();
+            sb.AppendLine("Matriz de distâncias mínimas entre todos os pares de vértices:");
+            for (int i = 1; i <= n; i++)
             {
-                for (int i = 0; i < quantidadeVertices; i++)
+                for (int j = 1; j <= n; j++)
                 {
-                    for (int j = 0; j < quantidadeVertices; j++)
-                    {
-                        if (distancias[i, k] != int.MaxValue && distancias[k, j] != int.MaxValue)
-                        {
-                            int novaDistancia = distancias[i, k] + distancias[k, j];
-
-                            if (novaDistancia < distancias[i, j])
-                            {
-                                distancias[i, j] = novaDistancia;
-                            }
-                        }
-                    }
-                }
-            }
-
-            StringBuilder resultado = new StringBuilder();
-            resultado.AppendLine("Matriz de distâncias mínimas entre todos os pares de vértices:");
-
-            for (int i = 0; i < quantidadeVertices; i++)
-            {
-                for (int j = 0; j < quantidadeVertices; j++)
-                {
-                    if (distancias[i, j] == int.MaxValue)
-                    {
-                        resultado.Append("INF ");
-                    }
+                    if (dist[i, j] == int.MaxValue)
+                        sb.Append("INF ");
                     else
-                    {
-                        resultado.Append(distancias[i, j]).Append(" ");
-                    }
+                        sb.Append(dist[i, j]).Append(' ');
                 }
-                resultado.AppendLine();
+                sb.AppendLine();
             }
 
-            return resultado.ToString();
+            return sb.ToString();
         }
+
     }
 }
