@@ -30,6 +30,7 @@ namespace TrabalhoGrafos
                 int numVertices = int.Parse(primeiraLinha[0]);
                 int numArestas = int.Parse(primeiraLinha[1]);
 
+
                 // Processa as linhas das arestas
                 for (int i = 1; i < linhas.Length; i++)
                 {
@@ -54,7 +55,7 @@ namespace TrabalhoGrafos
                 IGrafo grafo = representacao switch
                 {
                     Representacao.ListaAdjacencia => new GrafoListaAdjacencia(vertices, arestas),
-                    //Representacao.MatrizAdjacencia => new GrafoMatrizAdjacencia(vertices, arestas),           
+                    Representacao.MatrizAdjacencia => CriarMatrizAdjacencia(vertices.Count, arestas),
                     _ => throw new NotSupportedException("Representação de grafo não suportada.")
                 };
 
@@ -68,6 +69,14 @@ namespace TrabalhoGrafos
             {
                 throw new Exception($"ERRO inesperado ao ler o arquivo: {ex.Message}");
             }
+        }
+
+        private static IGrafo CriarMatrizAdjacencia(int numVertices, List<Aresta> arestas)
+        {
+            var m = new GrafoMatrizAdjacencia(numVertices);
+            foreach (var a in arestas)
+                m.AdicionarAresta(a.Origem, a.Destino, a.Peso);
+            return m;
         }
     }
 }

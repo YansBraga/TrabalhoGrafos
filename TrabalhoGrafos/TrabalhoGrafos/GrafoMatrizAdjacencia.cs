@@ -25,7 +25,7 @@ namespace TrabalhoGrafos
             }
         }
 
-        void IGrafo.AdicionarAresta(Vertice origem, Vertice destino, int peso)
+        public void AdicionarAresta(Vertice origem, Vertice destino, int peso)
         {            
             if (_matrizAdjacencia[origem.Id, destino.Id] == -1) // Verifica se a aresta não existe
             {
@@ -96,21 +96,27 @@ namespace TrabalhoGrafos
             return "Matriz de Adjacência";
         }
 
-        List<Aresta> IGrafo.ArestasIncidentes(Vertice v)
+        public List<Aresta> ArestasIncidentes(Vertice v)
         {
-            List<Aresta> arestas = new List<Aresta>();
-
             if (v.Id < 0 || v.Id >= NumeroVertices)
-            {
                 throw new ArgumentOutOfRangeException("O índice do vértice está fora do intervalo.");
-            }
 
+            var arestas = new List<Aresta>();
+
+            // 1) Entrantes: coluna fixa = v.Id
             for (int i = 0; i < NumeroVertices; i++)
             {
-                if (_matrizAdjacencia[i, v.Id] != -1) // Aresta incidindo em v
-                {
-                    arestas.Add(new Aresta(new Vertice(i), v, _matrizAdjacencia[i, v.Id]));
-                }
+                int peso = _matrizAdjacencia[i, v.Id];
+                if (peso != -1)
+                    arestas.Add(new Aresta(new Vertice(i), v, peso));
+            }
+
+            // 2) Saídas: linha fixa = v.Id
+            for (int j = 0; j < NumeroVertices; j++)
+            {
+                int peso = _matrizAdjacencia[v.Id, j];
+                if (peso != -1)
+                    arestas.Add(new Aresta(v, new Vertice(j), peso));
             }
 
             return arestas;
@@ -130,11 +136,6 @@ namespace TrabalhoGrafos
             }
 
             return arestas;
-        }
-
-        private List<Aresta> ArestasIncidentes(Vertice v1)
-        {
-            throw new NotImplementedException();
         }
 
         List<Vertice> IGrafo.VerticesIncidentes(Aresta aresta)
@@ -208,12 +209,33 @@ namespace TrabalhoGrafos
 
         public void SubstituirPeso(Aresta aresta, int peso)
         {
-            throw new NotImplementedException();
+            _matrizAdjacencia[aresta.Origem.Id, aresta.Destino.Id] = peso;
         }
 
         public bool TrocarVertices(Vertice v1, Vertice v2)
-        {
-            throw new NotImplementedException();
+        {            
+            if (v1.Id < 0 || v1.Id >= NumeroVertices ||
+                v2.Id < 0 || v2.Id >= NumeroVertices)
+                throw new ArgumentOutOfRangeException("Um ou ambos os índices dos vértices estão fora do intervalo.");
+
+            int i = v1.Id;
+            int j = v2.Id;
+            
+            for (int col = 0; col < NumeroVertices; col++)
+            {
+                int tmp = _matrizAdjacencia[i, col];
+                _matrizAdjacencia[i, col] = _matrizAdjacencia[j, col];
+                _matrizAdjacencia[j, col] = tmp;
+            }
+
+            for (int row = 0; row < NumeroVertices; row++)
+            {
+                int tmp = _matrizAdjacencia[row, i];
+                _matrizAdjacencia[row, i] = _matrizAdjacencia[row, j];
+                _matrizAdjacencia[row, j] = tmp;
+            }
+            
+            return true;
         }
 
         //-----------------------------------Algoritmos-----------------------------------//
