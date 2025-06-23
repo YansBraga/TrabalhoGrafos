@@ -14,6 +14,9 @@ namespace TrabalhoGrafos
             int arestas = 0;
             int vertices = 0;
 
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.Yellow;
+
             while (!sair)
             {
                 Console.Clear();
@@ -70,7 +73,7 @@ namespace TrabalhoGrafos
                         // Aqui você implementará o switch para todas as 15 operações do trabalho
                         switch (opcaoPrincipal)
                         {
-                            case 1: //  Leitura e impressão de um grafo já pronto. Nesse caso, vocês deverão ler um grafo de entrada no formato DIMACS 1. O grafo a ser lido, deve ser representado em uma Lista de Adjacência, Matriz de Adjacência ou Matriz de Incidência.
+                            case 1: //  Leitura e impressão de um grafo já pronto. Nesse caso, vocês deverão ler um grafo de entrada no formato DIMACS 1. O grafo a ser lido, deve ser representado em uma Lista de Adjacência, Matriz de Adjacência ou Matriz de Incidência.                                
                                 Console.WriteLine(grafo.Imprimir());
                                 break;
 
@@ -88,14 +91,23 @@ namespace TrabalhoGrafos
                                 break;
 
                             case 3: //  Imprimir todos os vértices adjacentes a um vértice v, informado pelo usuário.                    
-                                grafo.VerticesAdjascentes(LerVertice()).ForEach(v => Console.WriteLine(v));
-                                break;
+                                Console.WriteLine($"Vértices adjascentes:");
+
+                                List<Vertice> vertices_ = grafo.VerticesAdjascentes(LerVertice());
+
+                                if (vertices_.Any())
+                                    vertices_.ForEach(v => Console.WriteLine(v));
+                                else
+                                    Console.WriteLine("Não existem vértices adjascentes para este vértice");
+                                    break;
 
                             case 4: //  Imprimir todas as arestas incidentes a um vértice v, informado pelo usuário.
+                                Console.WriteLine($"Arestas incidentes:");
                                 grafo.ArestasIncidentes(LerVertice()).ForEach(a => Console.WriteLine(a));
                                 break;
 
                             case 5: //  Imprimir todos os vértices incidentes a uma aresta a, informada pelo usuário.
+                                Console.WriteLine($"Vértices incidentes:");
                                 grafo.VerticesIncidentes(LerAresta()).ForEach(v => Console.WriteLine(v));
                                 break;
 
@@ -182,6 +194,8 @@ namespace TrabalhoGrafos
                                 Console.WriteLine("Opção inválida. Tente novamente.");
                                 break;
                         }
+
+                        Console.ReadKey();
                     }
                     else
                     {
@@ -198,7 +212,7 @@ namespace TrabalhoGrafos
         public static void ExibirMenuPrincipal()
         {
             Console.Clear();
-            Console.WriteLine("--- Menu Principal (Grafo Carregado) ---");
+            Console.WriteLine($"--- Menu Principal (Grafo Carregado - {grafo.ToString()}) ---");
             Console.WriteLine("Escolha uma operação para realizar no grafo:");
             Console.WriteLine("1. Imprimir representação do grafo");
             Console.WriteLine("2. Imprimir todas as arestas adjacentes a uma aresta");

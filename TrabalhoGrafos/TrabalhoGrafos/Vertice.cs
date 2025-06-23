@@ -66,4 +66,13 @@ public class Vertice
 
         return _id + "\n" + sb.ToString();
     }
+
+    public bool Equals(Vertice other)
+    {
+        if (other is null) return false;
+        return Id == other.Id;
+    }
+
+    public override bool Equals(object obj)
+        => obj is Vertice v && Equals(v);
 }

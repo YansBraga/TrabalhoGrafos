@@ -38,8 +38,13 @@ namespace TrabalhoGrafos
         public void AdicionarAresta(Vertice origem, Vertice destino, int peso)
         {
             bool added = LocalizarVertice(origem.Id)?.AdicionarArestaSaindo(destino, peso) ?? false;
+                       
             if (added)
+            {
+                Vertice destinoGrafo = LocalizarVertice(destino.Id);
+                destinoGrafo.AdicionarArestaEntrando(origem, peso);
                 NumeroArestas++;
+            }
             else
                 Console.WriteLine($"Aresta de {origem} para {destino} já existe.");
         }
@@ -117,6 +122,8 @@ namespace TrabalhoGrafos
             {
                 arestasIncidentes.AddRange(verticeLocalizado.ArestasEntrantes.Concat(verticeLocalizado.ArestasSaindo).ToList());
                 arestasIncidentes.AddRange(verticeLocalizado.ArestasSaindo.Concat(verticeLocalizado.ArestasSaindo).ToList());
+
+                arestasIncidentes = arestasIncidentes.Distinct().ToList();
             }
 
             return arestasIncidentes;
