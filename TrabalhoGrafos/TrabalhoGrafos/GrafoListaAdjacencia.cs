@@ -54,8 +54,8 @@ namespace TrabalhoGrafos
         /// </summary>
         public string Imprimir()
         {
-            var sb = new StringBuilder();
-            foreach (var v in _vertices.Values)
+            StringBuilder sb = new StringBuilder();
+            foreach (Vertice v in _vertices.Values)
             {
                 sb.Append(v.Id).Append(": ");
                 var listaArestas = v.ArestasSaindo.Select(a => $"{v.Id} -> {a.Destino.Id} (Peso: {a.Peso})");
