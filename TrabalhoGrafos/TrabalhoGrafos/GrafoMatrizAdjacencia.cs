@@ -157,7 +157,8 @@ namespace TrabalhoGrafos
                 return new Aresta(origem, destino, _matrizAdjacencia[origem.Id, destino.Id]);
             }
 
-            throw new InvalidOperationException("A aresta não existe.");
+            Console.WriteLine("A aresta não existe.");
+            return null;
         }
 
         public int GrauVertice(Vertice v)

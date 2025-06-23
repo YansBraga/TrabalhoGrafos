@@ -43,40 +43,45 @@ namespace TrabalhoGrafos
 
                                 break;
                             case 2:
-                                StringBuilder sb = new StringBuilder();
+                                // 1) Lê quantos vértices e arestas
+                                Console.Write("Insira a quantidade de vértices: ");
+                                int numVertices = int.Parse(Console.ReadLine()!);
+                                Console.Write("Insira a quantidade de arestas: ");
+                                int numArestas = int.Parse(Console.ReadLine()!);
 
-                                Console.WriteLine("Insira a quantidade de vértices: ");
-                                vertices = int.Parse(Console.ReadLine());
-
-                                Console.WriteLine("Insira a quantidade de arestas: ");
-                                arestas = int.Parse(Console.ReadLine());
-
-                                sb.AppendLine($"{vertices} {arestas}");
-
-                                for (int i = 1; i < arestas; i++)
+                                // 2) Lê cada aresta e monta a lista de arestas
+                                var arestas_ = new List<Aresta>();
+                                for (int i = 1; i <= numArestas; i++)
                                 {
-
-                                    Console.WriteLine("Digite a origem da aresta: ");
-                                    int origem = int.Parse(Console.ReadLine());
-                                    Console.WriteLine("Digite o destino da aresta: ");
-                                    int destino = int.Parse(Console.ReadLine());
-                                    Console.WriteLine("Digite o peso da aresta: ");
-                                    int peso = int.Parse(Console.ReadLine());
-
-                                    sb.AppendLine($"{origem} {destino} {peso}");
+                                    Console.Write($"Aresta #{i} (origem destino peso): ");
+                                    var partes = Console.ReadLine()!
+                                        .Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                                    int o = int.Parse(partes[0]);
+                                    int d = int.Parse(partes[1]);
+                                    int p = int.Parse(partes[2]);
+                                    arestas_.Add(new Aresta(new Vertice(o), new Vertice(d), p));
                                 }
-                                // Obtém o diretório do projeto, assumindo que o arquivo está na raiz do projeto
-                                var projetoDir = Directory.GetParent(AppContext.BaseDirectory) // ...\bin\Debug\net8.0
-                                                        .Parent // ...\bin\Debug
-                                                        .Parent // ...\bin
-                                                        .Parent // ...\<pasta do projeto>
-                                                        .FullName;
-                                string path = Path.Combine(projetoDir, "grafo.dimacs");
 
-                                // Salva o conteúdo do StringBuilder no arquivo
-                                File.WriteAllText(path, sb.ToString());
+                                // 3) Garante que temos a lista de todos os vértices (1..n)
+                                var vertices_ = Enumerable
+                                    .Range(1, numVertices)
+                                    .Select(id => new Vertice(id))
+                                    .ToList();
 
-                                grafo = Arquivo.ImportarArquivo();
+                                // 4) Escolhe a representação com base na densidade
+                                var representacao = SelecionadorTipoGrafo.Choose(numVertices, numArestas);
+                                grafo = representacao switch
+                                {
+                                    Representacao.ListaAdjacencia =>
+                                        new GrafoListaAdjacencia(vertices_, arestas_),
+                                    Representacao.MatrizAdjacencia =>
+                                        // helper que cria e preenche a matriz:
+                                        Arquivo.CriarMatrizAdjacencia(numVertices, arestas_),
+                                    _ => throw new NotSupportedException("Representação não suportada.")
+                                };
+
+                                // 5) Exibe qual foi escolhida e imprime
+                                Console.WriteLine($"\nUsando `{grafo}`\n");
 
                                 if (grafo != null)
                                     Console.WriteLine($"Grafo salvo com sucesso! \nRepresentação: {grafo.ToString()}");

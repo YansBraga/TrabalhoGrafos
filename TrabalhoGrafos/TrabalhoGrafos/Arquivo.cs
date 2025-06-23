@@ -71,7 +71,7 @@ namespace TrabalhoGrafos
             }
         }
 
-        private static IGrafo CriarMatrizAdjacencia(int numVertices, List<Aresta> arestas)
+        public static IGrafo CriarMatrizAdjacencia(int numVertices, List<Aresta> arestas)
         {
             var m = new GrafoMatrizAdjacencia(numVertices);
             foreach (var a in arestas)
