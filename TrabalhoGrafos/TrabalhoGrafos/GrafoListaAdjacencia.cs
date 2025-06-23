@@ -243,9 +243,9 @@ namespace TrabalhoGrafos
                             int v =aresta.Destino.Id;
                             int peso = aresta.Peso;
 
-                            int novaDistancia = distancias[u] + peso;
+                            int novaDistancia = distancias[u-1] + peso;
 
-                            if (novaDistancia < distancias[v])
+                            if (novaDistancia < distancias[v-1])
                             {
                                 distancias[v] = novaDistancia;
                                 predecessores[v] = new Vertice(u);
