@@ -324,36 +324,46 @@ namespace TrabalhoGrafos
         {
             int t = 0;
             Queue<Vertice> fila = new Queue<Vertice>();
-            List<int> L = new List<int>(new int[grafo.NumeroVertices]);
-            List<int> nivel = new List<int>(new int[grafo.NumeroVertices]);
-            List<Vertice> pai = new List<Vertice>(new Vertice[grafo.NumeroVertices]);
+            List<int> L = new List<int>();
+            List<int> nivel = new List<int>();
+            List<Vertice> pai = new List<Vertice>();
 
             for (int i = 0; i < grafo.NumeroVertices; i++)
             {
+                L.Add(0);
                 L[i] = 0;
+                nivel.Add(0);
                 nivel[i] = 0;
+                pai.Add(null);
                 pai[i] = null;
             }
 
             fila.Enqueue(v);
             t++;
-            L[v.Id] = t;
-            nivel[v.Id] = 0;
+            L[v.Id-1] = t;
+            nivel[v.Id-1] = 0;
 
             while (fila.Count > 0)
             {
                 Vertice atual = fila.Dequeue();
 
-                foreach (Vertice vert in grafo.VerticesAdjascentes(atual).OrderBy(adj => adj.Id))
+                try
                 {
-                    if (L[vert.Id] == 0)
+                    foreach (Vertice vert in grafo.VerticesAdjascentes(atual).OrderBy(adj => adj.Id-1))
+                {
+                    if (L[vert.Id-1] == 0)
                     {
                         t++;
-                        L[vert.Id] = t;
-                        nivel[vert.Id] = nivel[atual.Id] + 1;
-                        pai[vert.Id] = atual;
+                        L[vert.Id-1] = t;
+                        nivel[vert.Id-1] = nivel[atual.Id-1] + 1;
+                        pai[vert.Id-1] = atual;
                         fila.Enqueue(vert);
                     }
+                }
+                }
+                catch (System.Exception)
+                {
+                    Console.WriteLine("Vertice " + atual + " nao localizado");
                 }
             }
 
@@ -362,8 +372,9 @@ namespace TrabalhoGrafos
             {
                 if (L[i] != 0)
                 {
-                    Console.WriteLine($"Vértice: {i}, Nível: {nivel[i]}, Pai: {(pai[i] != null ? pai[i].Id.ToString() : "null")}");
+                    Console.WriteLine($"Vértice: {i+1}, Nível: {nivel[i]}, Pai: {(pai[i] != null ? pai[i].Id.ToString() : "null")}");
                 }
+                
             }
         }
 
