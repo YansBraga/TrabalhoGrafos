@@ -172,38 +172,80 @@ namespace TrabalhoGrafos
         }
 
         public bool TrocarVertices(Vertice v1, Vertice v2)
-        {
-            
-            var vert1 = LocalizarVertice(v1.Id);
-            var vert2 = LocalizarVertice(v2.Id);
-            if (vert1 == null || vert2 == null) return false;
-
-            
-            var tempSaida = vert1.ArestasSaindo;
-
-            vert1.setArestasSaindo(vert2.ArestasSaindo);
-            vert2.setArestasSaindo(tempSaida);
-
-            
-            foreach (var u in _vertices.Values)
+        {            
+            if (v1 == null || v2 == null || !_vertices.ContainsKey(v1.Id) || !_vertices.ContainsKey(v2.Id))
             {
-                foreach (var a in u.ArestasSaindo)
-                {
-                    if (a.Destino == vert1) a.Destino = vert2;
-                    else if (a.Destino == vert2) a.Destino = vert1;
-                }
+                return false;
             }
 
             
-            foreach (var u in _vertices.Values)
-                u.ArestasEntrantes.Clear();
+            List<Aresta> arestasSaindoV1 = new List<Aresta>(v1.ArestasSaindo);
+            List<Aresta> arestasEntrandoV1 = new List<Aresta>(v1.ArestasEntrantes);
 
-            foreach (var u in _vertices.Values)
-                foreach (var a in u.ArestasSaindo)
-                    a.Destino.ArestasEntrantes.Add(a);
+            List<Aresta> arestasSaindoV2 = new List<Aresta>(v2.ArestasSaindo);
+            List<Aresta> arestasEntrandoV2 = new List<Aresta>(v2.ArestasEntrantes);
+
+            v1.ArestasSaindo.Clear();
+            v1.ArestasEntrantes.Clear();
+            v2.ArestasSaindo.Clear();
+            v2.ArestasEntrantes.Clear();
+
+            
+            foreach (var aresta in arestasSaindoV1)
+            {
+                aresta.Destino.ArestasEntrantes.RemoveAll(a => a.Origem.Equals(v1) && a.Destino.Equals(aresta.Destino));
+            }
+            
+            foreach (var aresta in arestasSaindoV2)
+            {
+                aresta.Destino.ArestasEntrantes.RemoveAll(a => a.Origem.Equals(v2) && a.Destino.Equals(aresta.Destino));
+            }
+            
+            foreach (var aresta in arestasEntrandoV1)
+            {
+                aresta.Origem.ArestasSaindo.RemoveAll(a => a.Destino.Equals(v1) && a.Origem.Equals(aresta.Origem));
+            }
+            
+            foreach (var aresta in arestasEntrandoV2)
+            {
+                aresta.Origem.ArestasSaindo.RemoveAll(a => a.Destino.Equals(v2) && a.Origem.Equals(aresta.Origem));
+            }
+                        
+            foreach (var aresta in arestasSaindoV1)
+            {
+                var destinoFinal = aresta.Destino.Equals(v2) ? v1 : aresta.Destino;
+                AdicionarAresta(v2, destinoFinal, aresta.Peso);
+            }
+            
+            foreach (var aresta in arestasSaindoV2)
+            {
+                var destinoFinal = aresta.Destino.Equals(v1) ? v2 : aresta.Destino;
+                AdicionarAresta(v1, destinoFinal, aresta.Peso);
+            }
+            
+            foreach (var aresta in arestasEntrandoV1)
+            {
+                var origemFinal = aresta.Origem.Equals(v2) ? v1 : aresta.Origem;
+                
+                if (!origemFinal.Equals(v1))
+                {
+                    AdicionarAresta(origemFinal, v2, aresta.Peso);
+                }
+            }
+            
+            foreach (var aresta in arestasEntrandoV2)
+            {
+                var origemFinal = aresta.Origem.Equals(v1) ? v2 : aresta.Origem;
+                
+                if (!origemFinal.Equals(v2))
+                {
+                    AdicionarAresta(origemFinal, v1, aresta.Peso);
+                }
+            }
 
             return true;
         }
+
 
         public string Dijkstra(Vertice origem, Vertice destino)
         {
@@ -375,7 +417,6 @@ namespace TrabalhoGrafos
 
             return resultado.ToString();
         }
-
     }
 }
         

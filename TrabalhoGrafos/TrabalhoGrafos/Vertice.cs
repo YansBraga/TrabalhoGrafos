@@ -17,14 +17,23 @@ public class Vertice
     public List<Aresta> ArestasEntrantes => _arestasEntrantes;
     public List<Aresta> ArestasSaindo => _arestasSaindo;
 
-    public void setArestasEntrantes(List<Aresta> arestas)
+    public void MudarValor(int novo)
     {
-        _arestasEntrantes = arestas;
+        _id = novo;
     }
 
-    public void setArestasSaindo(List<Aresta> arestas)
+    public void setArestasEntrantes(List<Aresta> arestas, Vertice destino)
+    {
+        _arestasEntrantes = arestas;
+
+        _arestasSaindo.ForEach(i => i.Destino = destino);
+    }
+
+    public void setArestasSaindo(List<Aresta> arestas, Vertice origem)
     {
         _arestasSaindo = arestas;
+
+        _arestasSaindo.ForEach(i => i.Origem = origem);
     }
 
     public int Id => _id;
