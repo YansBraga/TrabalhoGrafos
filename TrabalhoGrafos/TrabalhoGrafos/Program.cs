@@ -108,8 +108,7 @@ namespace TrabalhoGrafos
                 {
                     ExibirMenuPrincipal();
                     if (int.TryParse(Console.ReadLine(), out int opcaoPrincipal))
-                    {
-                        // Aqui você implementará o switch para todas as 15 operações do trabalho
+                    {                        
                         switch (opcaoPrincipal)
                         {
                             case 1: //  Leitura e impressão de um grafo já pronto. Nesse caso, vocês deverão ler um grafo de entrada no formato DIMACS 1. O grafo a ser lido, deve ser representado em uma Lista de Adjacência, Matriz de Adjacência ou Matriz de Incidência.                                

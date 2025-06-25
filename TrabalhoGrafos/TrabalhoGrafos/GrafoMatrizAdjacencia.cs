@@ -20,7 +20,15 @@ namespace TrabalhoGrafos
             {
                 for (int j = 0; j <= numVertices; j++)
                 {
-                    _matrizAdjacencia[i, j] = -1; // Usando -1 para indicar que não há aresta
+                    //diagonal principal
+                    if (i == j)
+                    {
+                        _matrizAdjacencia[i, j] = 0;
+                    }
+                    else
+                    {
+                        _matrizAdjacencia[i, j] = -1; // Para o resto, -1 significa sem aresta.
+                    }
                 }
             }
         }
@@ -59,16 +67,16 @@ namespace TrabalhoGrafos
 
             for (int j = 1; j <= NumeroVertices; j++) // Em um grafo direcionado, arestas entrantes e saintes sao vertices adjascentes
             {
-                if (_matrizAdjacencia[v.Id, j] != -1 || _matrizAdjacencia[j, v.Id] != -1)
+                if ((_matrizAdjacencia[v.Id, j] != -1 && _matrizAdjacencia[v.Id, j] != 0) || (_matrizAdjacencia[j, v.Id] != -1 && _matrizAdjacencia[j, v.Id] != 0))
                 {
                     Vertice ver = new Vertice(j);
 
-                    if (_matrizAdjacencia[v.Id, j] != -1) //Arestas saintes
+                    if (_matrizAdjacencia[v.Id, j] != -1 && _matrizAdjacencia[v.Id, j] != 0) //Arestas saintes
                     {
                         ver.AdicionarArestaSaindo(new Vertice(j), _matrizAdjacencia[v.Id, j]);
                     }
 
-                    if (_matrizAdjacencia[j, v.Id] != -1) // Arestas entrantes
+                    if (_matrizAdjacencia[j, v.Id] != -1 && _matrizAdjacencia[v.Id, j] != 0) // Arestas entrantes
                     {
                         ver.AdicionarArestaEntrando(new Vertice(j), _matrizAdjacencia[v.Id, j]);
                     }
