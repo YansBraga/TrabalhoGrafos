@@ -15,8 +15,7 @@ namespace TrabalhoGrafos
         public static void Main(string[] args)
         {
             bool sair = false;
-            int arestas = 0;
-            int vertices = 0;
+            
 
             Console.BackgroundColor = ConsoleColor.Black;
             Console.ForegroundColor = ConsoleColor.Yellow;

@@ -67,7 +67,7 @@ namespace TrabalhoGrafos
 
             for (int j = 1; j <= NumeroVertices; j++) // Em um grafo direcionado, arestas entrantes e saintes sao vertices adjascentes
             {
-                if ((_matrizAdjacencia[v.Id, j] != -1 && _matrizAdjacencia[v.Id, j] != 0) || (_matrizAdjacencia[j, v.Id] != -1 && _matrizAdjacencia[j, v.Id] != 0))
+                if ((_matrizAdjacencia[v.Id, j] > 0 || _matrizAdjacencia[j, v.Id] > 0) || (_matrizAdjacencia[j, v.Id] != -1 && _matrizAdjacencia[j, v.Id] != 0))
                 {
                     Vertice ver = new Vertice(j);
 
@@ -113,7 +113,7 @@ namespace TrabalhoGrafos
             for (int i = 1; i <= NumeroVertices; i++)
             {
                 int peso = _matrizAdjacencia[i, v.Id];
-                if (peso != -1)
+                if (peso != -1 && peso != 0)
                     arestas.Add(new Aresta(new Vertice(i), v, peso));
             }
 
@@ -121,7 +121,7 @@ namespace TrabalhoGrafos
             for (int j = 1; j <= NumeroVertices; j++)
             {
                 int peso = _matrizAdjacencia[v.Id, j];
-                if (peso != -1)
+                if (peso != -1 && peso != 0)
                     arestas.Add(new Aresta(v, new Vertice(j), peso));
             }
 
@@ -172,31 +172,23 @@ namespace TrabalhoGrafos
         public int GrauVertice(Vertice v)
         {
             if (v.Id < 1 || v.Id > NumeroVertices)
-            {
                 throw new ArgumentOutOfRangeException("O índice do vértice está fora do intervalo.");
-            }
 
             int grau = 0;
 
+            // Saídas
             for (int j = 1; j <= NumeroVertices; j++)
-            {
-                if (_matrizAdjacencia[v.Id, j] != -1)
-                {
+                if (_matrizAdjacencia[v.Id, j] > 0)
                     grau++;
-                }
-            }
 
-            // Grau de entrada
+            // Entradas
             for (int i = 1; i <= NumeroVertices; i++)
-            {
-                if (_matrizAdjacencia[i, v.Id] != -1)
-                {
+                if (_matrizAdjacencia[i, v.Id] > 0)
                     grau++;
-                }
-            }
 
             return grau;
         }
+
         public bool IsAdjascente(Vertice v1, Vertice v2)
         {
             if (v1.Id < 1 || v1.Id > NumeroVertices ||
@@ -276,7 +268,7 @@ namespace TrabalhoGrafos
                     for (int v = 1; v <= NumeroVertices; v++)
                     {
                         int peso = _matrizAdjacencia[u, v];
-                        if (peso != -1)
+                        if (peso != -1 && peso != 0)
                         {
                             int novaDist = distancias[u] + peso;
                             if (novaDist < distancias[v])
