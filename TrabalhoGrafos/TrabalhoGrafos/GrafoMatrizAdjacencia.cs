@@ -310,6 +310,7 @@ namespace TrabalhoGrafos
             int n = NumeroVertices;
             int[,] dist = new int[n + 1, n + 1];
 
+            // Inicializa a matriz de distâncias
             for (int i = 1; i <= n; i++)
             {
                 for (int j = 1; j <= n; j++)
@@ -323,21 +324,24 @@ namespace TrabalhoGrafos
                 }
             }
 
+            // Algoritmo
             for (int k = 1; k <= n; k++)
             {
                 for (int i = 1; i <= n; i++)
                 {
-                    if (dist[i, k] == int.MaxValue) continue;
                     for (int j = 1; j <= n; j++)
                     {
-                        if (dist[k, j] == int.MaxValue) continue;
-                        int viaK = dist[i, k] + dist[k, j];
-                        if (viaK < dist[i, j])
-                            dist[i, j] = viaK;
+                        if (dist[i, k] != int.MaxValue && dist[k, j] != int.MaxValue)
+                        {
+                            int viaK = dist[i, k] + dist[k, j];
+                            if (viaK < dist[i, j])
+                                dist[i, j] = viaK;
+                        }
                     }
                 }
             }
 
+            // Impressão da matriz resultante
             var sb = new StringBuilder();
             sb.AppendLine("Matriz de distâncias mínimas entre todos os pares de vértices:");
             for (int i = 1; i <= n; i++)

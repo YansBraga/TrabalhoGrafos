@@ -57,7 +57,7 @@ namespace TrabalhoGrafos
             StringBuilder sb = new StringBuilder();
             foreach (Vertice v in _vertices.Values)
             {
-                sb.Append(v.Id).Append(": ");
+                //sb.Append(v.Id).Append(": ");
                 var listaArestas = v.ArestasSaindo.Select(a => $"{v.Id} -> {a.Destino.Id} (Peso: {a.Peso})");
                 sb.AppendLine(string.Join(", ", listaArestas));
             }
@@ -178,7 +178,6 @@ namespace TrabalhoGrafos
                 return false;
             }
 
-            
             List<Aresta> arestasSaindoV1 = new List<Aresta>(v1.ArestasSaindo);
             List<Aresta> arestasEntrandoV1 = new List<Aresta>(v1.ArestasEntrantes);
 

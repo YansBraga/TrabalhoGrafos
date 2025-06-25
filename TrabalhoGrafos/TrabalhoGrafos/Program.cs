@@ -349,16 +349,16 @@ namespace TrabalhoGrafos
                 try
                 {
                     foreach (Vertice vert in grafo.VerticesAdjascentes(atual).OrderBy(adj => adj.Id-1))
-                {
-                    if (L[vert.Id-1] == 0)
                     {
-                        t++;
-                        L[vert.Id-1] = t;
-                        nivel[vert.Id-1] = nivel[atual.Id-1] + 1;
-                        pai[vert.Id-1] = atual;
-                        fila.Enqueue(vert);
+                        if (L[vert.Id-1] == 0)
+                        {
+                            t++;
+                            L[vert.Id-1] = t;
+                            nivel[vert.Id-1] = nivel[atual.Id-1] + 1;
+                            pai[vert.Id-1] = atual;
+                            fila.Enqueue(vert);
+                        }
                     }
-                }
                 }
                 catch (System.Exception)
                 {
